@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.eliteclass",
+      "sha256_cert_fingerprints": [
+        "DC:02:64:34:59:11:6B:6E:21:59:87:D9:E6:5B:15:9B:58:29:6A:77:E0:74:2F:30:60:B0:1F:99:B0:06:6B:30"
+      ]
+    }
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "applinks": {
+      "apps": [],
+      "details": [
+          {
+              "appID": "F8BN7SMVM8.com.eliteclass",
+              "paths": ["*"]
+          }
+      ]
+  }
+}

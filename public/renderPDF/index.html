@@ -1,0 +1,519 @@
+<!-- 
+  Author: zsubzwary: May 2023
+                  ___                             ___  
+                 (o o)                           (o o) 
+                (  V  ) DO NOT MODIFY THIS FILE (  V  )
+                --m-m-----------------------------m-m--
+
+  This is a custom code written to render PDF via WebAssembly in the browser to avoid the rendering issues for large PDF files.
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>PDF Viewer | EliteClass-LMS</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, shrink-to-fit=yes"
+      id="viewport-meta"
+    />
+
+    <style>
+      body {
+        background-color: gray;
+        margin: 0;
+        padding: 0;
+      }
+
+      #outline {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 20em;
+        max-width: 20em;
+        height: 100%;
+        overflow-y: scroll;
+        background-color: white;
+      }
+
+      #outline ul {
+        margin: 0;
+        padding-left: 1em;
+        font-size: small;
+      }
+
+      #outline a {
+        text-decoration: none;
+      }
+
+      #outline a:hover {
+        text-decoration: underline;
+      }
+
+      #outline + #pages {
+        margin-left: 20em;
+      }
+
+      #pages img {
+        display: block;
+        margin: 1em auto;
+        background-color: white;
+      }
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+      }
+
+      .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 400px;
+        border-radius: 20px;
+      }
+
+      .close {
+        float: right;
+        cursor: pointer;
+      }
+
+      .close:hover {
+        color: red;
+      }
+      #errorMessage {
+        font-size: 3rem;
+      }
+
+      @media screen and (max-width: 768px) {
+        .modal-content {
+          margin: 10% auto;
+        }
+      }
+
+      @media (max-width: 767px) {
+        /* Adjust h2 styles for mobile */
+        .modal-content {
+          max-width: 500px;
+        }
+      }
+
+      /* Styles for tablets */
+      @media (min-width: 768px) and (max-width: 1023px) {
+        /* Adjust styles for tablets */
+        .modal-content {
+          max-width: 500px;
+        }
+      }
+      /* Styles for laptops and larger screens */
+      @media (min-width: 1024px) {
+        /* Adjust styles for laptops and larger screens */
+        .modal-content {
+          max-width: 500px;
+        }
+      }
+
+      .spinner {
+        width: 15rem;
+        height: 15rem;
+        border-radius: 50%;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #3498db;
+        animation: spin 1s linear infinite;
+        margin: 30rem auto;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+    <script>
+      var defaultDPI = 100;
+      var zoomLevel = 100; // Desired zoom level in percentage (e.g., 200%)
+      // var caluculatedDPI = calculateDPI(zoomLevel);
+    </script>
+    <script src="libmupdf.js"></script>
+    <script>
+      var placeholderImage = `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><text x="50" y="50" font-family="Arial, sans-serif" font-size="30" fill="#000">Loading. Please Wait!</text></svg>`;
+      var fileUrl;
+      var loading = true;
+      var minimumPDFLoadedState = 1;
+
+      const searchParams = new URLSearchParams(window.location.search);
+      const firstParam = searchParams.keys().next().value;
+      const secondParam = searchParams.get("lang");
+      const firstParamValue = searchParams.get(firstParam);
+      document.addEventListener("DOMContentLoaded", () => {
+        const openModalButton = document.getElementById("openModal");
+        // const closeModalButton = document.getElementById("closeModal");
+        const modal = document.getElementById("modal");
+        const errorMessage = document.getElementById("errorMessage");
+        const spinner = document.getElementById("spinner");
+
+
+        if (
+          firstParamValue !== null &&
+          firstParamValue !== "" &&
+          firstParam !== undefined
+        ) {
+          fileUrl = firstParamValue;
+        } else {
+          spinner.style.display='none';
+          modal.style.display = "block";
+          if (
+            secondParam !== "" &&
+            secondParam !== undefined &&
+            secondParam !== null &&
+            secondParam === "ar"
+          ) {
+            errorMessage.textContent = "لم يتم العثور على الملف";
+          }
+          return;
+        }
+
+        openModalButton.addEventListener("click", () => {
+          modal.style.display = "block";
+        });
+
+        // closeModalButton.addEventListener("click", () => {
+        //   modal.style.display = "none";
+        // });
+
+        window.addEventListener("click", (event) => {
+          if (event.target === modal) {
+            modal.style.display = "none";
+          }
+        });
+      });
+
+      var currentDocument = null;
+      var blankPages = [];
+      var DPI = defaultDPI;
+
+      async function letsRenderThemAll() {
+        // var i, n = blankPages.length;
+        // for (i = 1; i <= n; ++i) {
+        //   if (blankPages[i]) {
+        //     setTimeout(() => {
+        //       var svgOfTheCurrentPage =  `data:image/svg+xml;utf8,${encodeURIComponent(mupdf.drawPageAsSVG(currentDocument, i, DPI))}`; //technically there is no need to pass DPI, because this is creating SVG's
+        //       blankPages[i].src = svgOfTheCurrentPage;
+        //       console.log("Rendered Page#",i);
+        //     }, i );
+        //     // blankPages[i] = undefined;
+        //   }
+        // }
+
+        // var i, n = blankPages.length;
+        // for (i = 1; i <= n; ++i) {
+        //   if (blankPages[i]) {
+        //     setTimeout((pageIndex) => {
+        //       var svgOfTheCurrentPage = `data:image/svg+xml;utf8,${encodeURIComponent(mupdf.drawPageAsSVG(currentDocument, pageIndex, DPI))}`; //No need to pass DPI anymore because this an SVG
+        //       blankPages[pageIndex].src = svgOfTheCurrentPage;
+        //       console.log("Rendered Page#", pageIndex);
+        //       // let loadedPagePercentage = (pageIndex/blankPages.length)*100;
+        //       // if (loading === true && loadedPagePercentage > minimumPDFLoadedState) {
+        //       //   spinner.style.display='none';
+        //       //   loading = false;
+        //       // }
+        //     }, 50, i);
+        //   }
+        // }
+
+
+        var i, n = blankPages.length;
+        for (i = 1; i <= n; ++i) {
+          if (blankPages[i]) {
+            await new Promise((resolve) => {
+              setTimeout(() => {
+                var svgOfTheCurrentPage = `data:image/svg+xml;utf8,${encodeURIComponent(mupdf.drawPageAsSVG(currentDocument, i, DPI))}`;
+                blankPages[i].src = svgOfTheCurrentPage;
+                console.log("Rendered Page#", i);
+                resolve();
+              }, 60);
+            });
+          }
+        }
+
+      }
+
+      // var filename = new URL(window.location.href).searchParams.get("file");
+
+      // if (!filename) filename = "bible.pdf";
+
+      // Module.preRun = function () {
+      //   FS.createPreloadedFile(".", filename, filename, true, false);
+      // };
+
+      function initializePDF(_dpi = defaultDPI) {
+        console.log("initializePDF() called");
+        Module.postRun = async function () {
+        var pagesDiv = document.getElementById("pages");
+       await fetch(fileUrl)
+          .then((response) => response.arrayBuffer())
+          .then((buffer) => {
+            var uint8Array = new Uint8Array(buffer);
+            var pdfFile = FS.createDataFile(
+              "/",
+              "file.pdf",
+              uint8Array,
+              true,
+              false
+            );
+            currentDocument = mupdf.openDocument("/file.pdf");
+            document.title = mupdf.documentTitle(currentDocument);
+
+            var outline = mupdf.documentOutline(currentDocument);
+            if (outline) {
+              var outlineDiv = document.createElement("div");
+              outlineDiv.id = "outline";
+              outlineDiv.appendChild(outline);
+              document.body.insertBefore(outlineDiv, pagesDiv);
+            }
+
+            var i,
+              n = mupdf.countPages(currentDocument);
+            for (i = 1; i <= n; ++i) {
+              var img = new Image();
+              img.id = "page" + i;
+              img.pageNumber = i;
+              img.width = mupdf.pageWidth(currentDocument, i, DPI);
+              img.height = mupdf.pageHeight(currentDocument, i, DPI);
+              img.src = `data:image/svg+xml;utf8,${encodeURIComponent(placeholderImage)}`;
+              img.style = 'width'
+              // img.src = `loading-circle.gif`;
+              img.useMap = "#map" + i;
+              var map = document.createElement("map");
+              map.name = "map" + i;
+              map.innerHTML = mupdf.pageLinks(currentDocument, i, DPI);
+              pagesDiv.appendChild(img);
+              pagesDiv.appendChild(map);
+              blankPages[i] = img;
+            }
+
+            // document.onscroll();
+          })
+          .catch((error) => {
+            if (
+              firstParamValue !== null &&
+              firstParamValue !== "" &&
+              firstParam !== undefined
+            ) {
+              if (
+                secondParam !== "" &&
+                secondParam !== undefined &&
+                secondParam !== null &&
+                secondParam === "ar"
+              ) {
+                errorMessage.textContent = "تعذر تحميل الملف";
+              } else {
+                errorMessage.textContent = "Unable to load file";
+              }
+            } else {
+            }
+
+            modal.style.display = "block";
+            console.error("mupdf: failed to load PDF file", error);
+            document.title = "Failed to load PDF file";
+          });
+
+          window.scrollBy(0,1);
+          spinner.style.display='none';
+          //letsRenderThemAll();
+        };
+      }
+
+      initializePDF();
+
+      async function onScollLogic() {
+        console.log("Scroll triggred");
+
+        function isVisible(element) {
+
+          if (!element) {
+            return false;
+          }
+
+          return new Promise((resolve, reject) => {
+            const observer = new IntersectionObserver(
+              ([entry]) => {
+                resolve(entry.isIntersecting);
+                observer.disconnect();
+              },
+              { root: null, rootMargin: '0px', threshold: 0 }
+            );
+
+            observer.observe(element);
+          });
+
+        }
+
+        var i,
+        n = blankPages.length;
+        for (i = 1; i <= n; ++i) {
+          // console.log(" :: IsVisible:", isVisible(blankPages[i]));
+          if (blankPages[i] && await isVisible(blankPages[i])) {
+            var svgOfTheCurrentPage =  `data:image/svg+xml;utf8,${encodeURIComponent(mupdf.drawPageAsSVG(currentDocument, i, DPI))}`; //technically there is no need to pass DPI, because this is creating SVG's
+            blankPages[i].src = svgOfTheCurrentPage;
+            console.log("Rendered Page#",i);
+            blankPages[i] = undefined;
+          }
+        }
+      }
+
+
+
+      let timeoutId;
+
+      function debounce(func, delay) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(func, delay);
+      }
+
+      document.onscroll = function () {
+        debounce(function () {
+          onScollLogic();
+        }, 200); // Adjust the delay (in milliseconds) as per your requirements
+      };
+
+
+
+
+      // document.onscroll = function () {
+      //   // function isVisible(element) {
+      //   //   return (
+      //   //     window.pageYOffset + window.innerHeight > element.offsetTop &&
+      //   //     window.pageYOffset < element.offsetTop + element.scrollHeight
+      //   //   );
+      //   // }
+      //   console.log("Scroll triggred");
+
+      //   function isVisible(element) {
+
+      //     if (!element) {
+      //       return false;
+      //     }
+
+      //     const rect = element.getBoundingClientRect();
+      //     const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+      //     const windowWidth = window.innerWidth || document.documentElement.clientWidth;
+
+      //     const vertInView = rect.top <= windowHeight && rect.bottom >= 0;
+      //     const horInView = rect.left <= windowWidth && rect.right >= 0;
+
+      //     return vertInView && horInView;
+
+      //     // const elementTop = element.offsetTop;
+      //     // const elementBottom = elementTop + element.offsetHeight;
+      //     // const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+      //     // const windowScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+      //     // return (elementBottom > windowScrollTop) && (elementTop < (windowScrollTop + windowHeight));
+
+      //   }
+
+      //   var i,
+      //   n = blankPages.length;
+      //   for (i = 1; i <= n; ++i) {
+      //     // console.log(" :: IsVisible:", isVisible(blankPages[i]));
+      //     if (blankPages[i] && isVisible(blankPages[i])) {
+      //       var svgOfTheCurrentPage =  `data:image/svg+xml;utf8,${encodeURIComponent(mupdf.drawPageAsSVG(currentDocument, i, DPI))}`; //technically there is no need to pass DPI, because this is creating SVG's
+
+      //       blankPages[i].src = svgOfTheCurrentPage;
+      //       //console.log(mupdf.drawPageAsSVG(currentDocument, i, DPI));
+      //       // debugger;
+      //       console.log("Rendered Page#",i);
+      //       blankPages[i] = undefined;
+      //     }
+      //   }
+      // };
+    </script>
+    <script>
+
+        function jiggleScrollBar() {
+          console.log("Jiggling One PIXEL");
+          window.scrollBy(0,1);
+          window.scrollBy(0,-1);
+        }
+
+        function zoomIn() {
+
+          if (zoomLevel < 250) {
+              zoomLevel += 25;
+              console.log("Zoomed in. Current zoom level:", zoomLevel);
+            } else {
+              console.log("Maximum zoom level reached.");
+            }
+          //initializePDF(zoomLevel)
+          document.documentElement.style.zoom = `${zoomLevel}%`;
+          jiggleScrollBar();
+        }
+
+        function zoomOut() {
+          if (zoomLevel > 25) {
+            zoomLevel -= 25;
+            console.log("Zoomed out. Current zoom level:", zoomLevel);
+          } else {
+            console.log("Minimum zoom level reached.");
+          }
+          // No need to re-render PDF becuase it is SVG and can scale infinity ♾️ .
+          //initializePDF(zoomLevel);
+          document.documentElement.style.zoom = `${zoomLevel}%`;
+          jiggleScrollBar();
+        }
+
+
+
+
+        window.addEventListener('message', function(event) {
+
+        var action = event.data.action;
+
+        if (action === 'zoomIn') {
+          console.log("zoom in triggred by postMesasge");
+          zoomIn();
+        } else if (action === 'zoomOut') {
+          console.log("zoom out triggred by postMesasge");
+          zoomOut();
+        }
+        else  if (action === "jiggleScroll") {
+          jiggleScrollBar();
+        }
+      });
+    </script>
+  </head>
+
+  <body>
+    <button style="display: none" id="openModal">Open Modal</button>
+    <div id="spinner" class="spinner"></div>
+
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <!-- <span id="closeModal" class="close">&times;</span> -->
+        <!-- <h2 style="margin: 0px">Alert</h2> -->
+        <div style="text-align: center">
+          <img style="height: 25rem; width: 25rem" src="./brokenFile.png" alt="" />
+          <p id="errorMessage">File not found.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div>
+      <button onclick="zoomIn()" >Zoom IN</button>
+      <button onclick="zoomOut()" >Zoom OUT</button>
+    </div> -->
+    <div id="pages"></div>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+.active {
+  background: white !important;
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.bullet {
+  /* margin: 0; */
+  display: block;
+  width: 9px;
+  height: 9px;
+  border-radius: 100%;
+  background-color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+}
+
+.horizontal {
+  display: flex;
+  gap: 2px;
+  margin-left: 10px;
+}

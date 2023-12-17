@@ -1,0 +1,32 @@
+.PhoneInput {
+  display: flex;
+}
+
+.containerClass {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.inputStyles {
+  border-radius: 8px;
+  border: 0;
+  height: 40px;
+  outline: none;
+  padding: 0 10px;
+  order: 2;
+}
+
+.buttonStyles {
+  border-radius: 8px;
+  border: 0;
+  height: 40px;
+  outline: none;
+  padding: 0 10px;
+  background-color: blue;
+  /* width: 120px; */
+}
+
+.inputStyles:focus {
+  outline: 1px solid #db990a;
+}
