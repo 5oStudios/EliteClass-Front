@@ -24,4 +24,5 @@ RUN chown -R ${USERNAME}:${GROUP_NAME} .
 
 USER $USERNAME
 
-CMD [ "pm2-runtime", "start", "ecosystem.config.js" ]
+# Run node js app
+CMD ["npm", "run", "start:prod"]
