@@ -10,8 +10,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN mv .env.example .env  \
-    && npm install pm2 -g;
+RUN npm install pm2 -g;
 
 RUN yarn install --force \
     && yarn run build;
@@ -25,4 +24,4 @@ RUN chown -R ${USERNAME}:${GROUP_NAME} .
 USER $USERNAME
 
 # Run node js app
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "start"]
