@@ -11,10 +11,12 @@ WORKDIR /app
 COPY . .
 
 RUN mv .env.example .env  \
+    && sed -i 's/pre.panel.lms.elite-class.com/dash.staging.elite-class.com/g' .env \
+    && sed -i 's/pre.lms.elite-class.com/app.staging.elite-class.com/g' .env \
     && npm install pm2 -g;
 
-RUN yarn install --force \
-    && yarn run build;
+RUN npm install --force \
+    && npm run build;
 
 EXPOSE 3000
 
