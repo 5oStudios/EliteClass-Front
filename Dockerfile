@@ -10,7 +10,8 @@ WORKDIR /app
 
 COPY . .
 
-RUN npm install pm2 -g;
+RUN mv .env.example .env  \
+    && npm install pm2 -g;
 
 RUN yarn install --force \
     && yarn run build;
