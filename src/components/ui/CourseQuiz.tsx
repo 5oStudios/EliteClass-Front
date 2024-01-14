@@ -14,6 +14,8 @@ import {
   Space,
   Stack,
   Text,
+  Textarea,
+  Image,
 } from '@mantine/core';
 import { CompletedMarkIcon } from '@/src/constants/icons';
 import { WrongIcon } from '@/src/constants/icons/wrongIcon';
@@ -70,6 +72,8 @@ export const CourseQuiz = () => {
 
   const getQuiz = async () => {
     const res = await axios.get(`quiz/start/${id}?secret= 11f24438-b63a-4de2-ae92-e1a1048706f5`);
+    console.log(res.data);
+
     return res.data;
   };
   // was this question answered?
@@ -92,6 +96,8 @@ export const CourseQuiz = () => {
 
   const { data, isLoading } = useQuery(['quiz', id], getQuiz, {
     onSuccess: (data) => {
+      console.log(data);
+
       if (!isRunning) {
         setIsComplete(data?.is_complete);
         const time = new Date();
@@ -112,6 +118,8 @@ export const CourseQuiz = () => {
     const answersid: string[] = [];
     console.log('ANSS:', answers);
     answers.forEach((ans) => {
+      console.log(ans);
+
       answersid.push(ans.ans);
     });
     return answersid;
@@ -160,7 +168,8 @@ export const CourseQuiz = () => {
     {
       onSuccess: (data) => {
         setResult(data);
-        //console.log('data', data);
+        console.log(result);
+
         if (!isComplete) {
           handleMarkComplete({ class_id: class_id as string });
         }
@@ -235,89 +244,276 @@ export const CourseQuiz = () => {
 
               {data?.questions?.map((question: any, i: number) => (
                 <Stack key={question.id}>
-                  <RadioGroup
-                    className="questions"
-                    label={
-                      <SimpleGrid
-                        sx={{ gridTemplateColumns: '75% max-content', alignItems: 'end' }}
-                      >
-                        <Text size="xs">{`${i + 1}- ${question.question}`}</Text>
-                        <Text
-                          px={6}
-                          py={2}
-                          size="xs"
-                          mt={3}
-                          sx={{
-                            alignSelf: 'start',
-                            color: 'white',
-                            background: '#298EAE',
-                            borderRadius: 5,
-                            flexShrink: 0,
-                          }}
+                  {question.type === 'mcq' && (
+                    <RadioGroup
+                      className="questions"
+                      label={
+                        <SimpleGrid
+                          sx={{ gridTemplateColumns: '75% max-content', alignItems: 'end' }}
                         >
-                          {data?.per_quiz_mark} {t.point}
-                        </Text>
-                      </SimpleGrid>
-                    }
-                    required
-                    orientation="vertical"
-                    styles={{
-                      required: {
-                        display: 'none',
-                      },
-                    }}
-                    sx={{
-                      disabled: {
-                        borderColor: '#edd491 !important',
-                        backgroundColor: 'red',
-                        color: 'red',
-                      },
-                    }}
-                    size="xs"
-                    color="blue"
-                    onChange={(value: any) => {
-                      setAnswers((state) => {
-                        console.log('STATE:', state);
-                        const newState = [...state];
-                        const currentQuestion = state.findIndex((q) => q.id === question.id);
-                        if (currentQuestion !== -1) {
-                          newState[currentQuestion] = { id: question.id, ans: value };
-                          return newState;
-                        } else {
-                          return [...newState, { id: question.id, ans: value }];
-                        }
-                      });
-                    }}
-                  >
-                    <Radio
-                      id={`rdb-a-${question.id}`}
-                      className="reportcardRadio"
-                      disabled={getResult.isSuccess}
-                      value={'a'}
-                      label={question.a}
+                          <Text size="xs">{`${i + 1}- ${question.question}`}</Text>
+                          <Text
+                            px={6}
+                            py={2}
+                            size="xs"
+                            mt={3}
+                            sx={{
+                              alignSelf: 'start',
+                              color: 'white',
+                              background: '#298EAE',
+                              borderRadius: 5,
+                              flexShrink: 0,
+                            }}
+                          >
+                            {data?.per_quiz_mark} {t.point}
+                          </Text>
+                        </SimpleGrid>
+                      }
+                      required
+                      orientation="vertical"
+                      styles={{
+                        required: {
+                          display: 'none',
+                        },
+                      }}
+                      sx={{
+                        disabled: {
+                          borderColor: '#edd491 !important',
+                          backgroundColor: 'red',
+                          color: 'red',
+                        },
+                      }}
+                      size="xs"
+                      color="blue"
+                      onChange={(value: any) => {
+                        setAnswers((state) => {
+                          console.log('STATE:', state);
+                          const newState = [...state];
+                          const currentQuestion = state.findIndex((q) => q.id === question.id);
+                          if (currentQuestion !== -1) {
+                            newState[currentQuestion] = { id: question.id, ans: value };
+                            return newState;
+                          } else {
+                            return [...newState, { id: question.id, ans: value }];
+                          }
+                        });
+                      }}
+                    >
+                      <Radio
+                        id={`rdb-a-${question.id}`}
+                        className="reportcardRadio"
+                        disabled={getResult.isSuccess}
+                        value={'a'}
+                        label={question.a}
+                      />
+                      <Radio
+                        id={`rdb-b-${question.id}`}
+                        className="reportcardRadio"
+                        disabled={getResult.isSuccess}
+                        value={'b'}
+                        label={question.b}
+                      />
+                      <Radio
+                        id={`rdb-c-${question.id}`}
+                        className="reportcardRadio"
+                        disabled={getResult.isSuccess}
+                        value={'c'}
+                        label={question.c}
+                      />
+                      <Radio
+                        id={`rdb-d-${question.id}`}
+                        className="reportcardRadio"
+                        disabled={getResult.isSuccess}
+                        value={'d'}
+                        label={question.d}
+                      />
+                    </RadioGroup>
+                  )}
+                  {question.type === 'audio' && (
+                    <Textarea
+                      label={
+                        <SimpleGrid
+                          sx={{ gridTemplateColumns: '75% max-content', alignItems: 'end' }}
+                        >
+                          <Text size="xs">{`${i + 1}- ${question.question}`}</Text>
+                          <Text
+                            px={6}
+                            py={2}
+                            size="xs"
+                            mt={3}
+                            sx={{
+                              alignSelf: 'start',
+                              color: 'white',
+                              background: '#298EAE',
+                              borderRadius: 5,
+                              flexShrink: 0,
+                            }}
+                          >
+                            {data?.per_quiz_mark} {t.point}
+                          </Text>
+                        </SimpleGrid>
+                      }
+                      description={
+                        <audio controls>
+                          <track kind="captions" src="path/to/captions.vtt" label="English" />
+                          <source
+                            src={`${process.env.NEXT_PUBLIC_audio_PATH}${question.audio}`}
+                            type="audio/mp3"
+                          />
+                          Your browser does not support the audio element.
+                        </audio>
+                      }
+                      placeholder="Type your answer here..."
+                      onChange={(value: any) => {
+                        setAnswers((state) => {
+                          console.log('STATE:', state);
+                          const newState = [...state];
+                          const currentQuestion = state.findIndex((q) => q.id === question.id);
+                          if (currentQuestion !== -1) {
+                            newState[currentQuestion] = {
+                              id: question.id,
+                              ans: value.target.value,
+                            };
+                            return newState;
+                          } else {
+                            return [...newState, { id: question.id, ans: value.target.value }];
+                          }
+                        });
+                      }}
                     />
-                    <Radio
-                      id={`rdb-b-${question.id}`}
-                      className="reportcardRadio"
-                      disabled={getResult.isSuccess}
-                      value={'b'}
-                      label={question.b}
+                  )}
+                  {question.type === 'image' && (
+                    <RadioGroup
+                      className="questions"
+                      label={
+                        <SimpleGrid
+                          sx={{ gridTemplateColumns: '75% max-content', alignItems: 'end' }}
+                        >
+                          <Text size="xs">{`${i + 1}- ${question.question}`}</Text>
+                          <Text
+                            px={6}
+                            py={2}
+                            size="xs"
+                            mt={3}
+                            sx={{
+                              alignSelf: 'start',
+                              color: 'white',
+                              background: '#298EAE',
+                              borderRadius: 5,
+                              flexShrink: 0,
+                            }}
+                          >
+                            {data?.per_quiz_mark} {t.point}
+                          </Text>
+                          <Image
+                            radius="md"
+                            src={`${process.env.NEXT_PUBLIC_image_PATH}${question.question_img}`}
+                          />
+                        </SimpleGrid>
+                      }
+                      required
+                      orientation="vertical"
+                      styles={{
+                        required: {
+                          display: 'none',
+                        },
+                      }}
+                      sx={{
+                        disabled: {
+                          borderColor: '#edd491 !important',
+                          backgroundColor: 'red',
+                          color: 'red',
+                        },
+                      }}
+                      size="xs"
+                      color="blue"
+                      onChange={(value: any) => {
+                        setAnswers((state) => {
+                          console.log('STATE:', state);
+                          const newState = [...state];
+                          const currentQuestion = state.findIndex((q) => q.id === question.id);
+                          if (currentQuestion !== -1) {
+                            newState[currentQuestion] = { id: question.id, ans: value };
+                            return newState;
+                          } else {
+                            return [...newState, { id: question.id, ans: value }];
+                          }
+                        });
+                      }}
+                    >
+                      <Radio
+                        id={`rdb-a-${question.id}`}
+                        className="reportcardRadio"
+                        disabled={getResult.isSuccess}
+                        value={'a'}
+                        label={question.a}
+                      />
+                      <Radio
+                        id={`rdb-b-${question.id}`}
+                        className="reportcardRadio"
+                        disabled={getResult.isSuccess}
+                        value={'b'}
+                        label={question.b}
+                      />
+                      <Radio
+                        id={`rdb-c-${question.id}`}
+                        className="reportcardRadio"
+                        disabled={getResult.isSuccess}
+                        value={'c'}
+                        label={question.c}
+                      />
+                      <Radio
+                        id={`rdb-d-${question.id}`}
+                        className="reportcardRadio"
+                        disabled={getResult.isSuccess}
+                        value={'d'}
+                        label={question.d}
+                      />
+                    </RadioGroup>
+                  )}
+                  {question.type === 'essay' && (
+                    <Textarea
+                      label={
+                        <SimpleGrid
+                          sx={{ gridTemplateColumns: '75% max-content', alignItems: 'end' }}
+                        >
+                          <Text size="xs">{`${i + 1}- ${question.question}`}</Text>
+                          <Text
+                            px={6}
+                            py={2}
+                            size="xs"
+                            mt={3}
+                            sx={{
+                              alignSelf: 'start',
+                              color: 'white',
+                              background: '#298EAE',
+                              borderRadius: 5,
+                              flexShrink: 0,
+                            }}
+                          >
+                            {data?.per_quiz_mark} {t.point}
+                          </Text>
+                        </SimpleGrid>
+                      }
+                      placeholder="Type your answer here..."
+                      onChange={(value: any) => {
+                        setAnswers((state) => {
+                          console.log('STATE:', state);
+                          const newState = [...state];
+                          const currentQuestion = state.findIndex((q) => q.id === question.id);
+                          if (currentQuestion !== -1) {
+                            newState[currentQuestion] = {
+                              id: question.id,
+                              ans: value.target.value,
+                            };
+                            return newState;
+                          } else {
+                            return [...newState, { id: question.id, ans: value.target.value }];
+                          }
+                        });
+                      }}
                     />
-                    <Radio
-                      id={`rdb-c-${question.id}`}
-                      className="reportcardRadio"
-                      disabled={getResult.isSuccess}
-                      value={'c'}
-                      label={question.c}
-                    />
-                    <Radio
-                      id={`rdb-d-${question.id}`}
-                      className="reportcardRadio"
-                      disabled={getResult.isSuccess}
-                      value={'d'}
-                      label={question.d}
-                    />
-                  </RadioGroup>
+                  )}
                   {getResult.isSuccess && isAnswered(question.id) ? (
                     <ResultCard correct={true} />
                   ) : (

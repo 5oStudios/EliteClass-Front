@@ -155,13 +155,20 @@ export const LoginForm = (
       setSubmitting(true);
       axios
         .post('login', {
+          username: values.email,
           ...values,
           fpjsid: fp?.data?.visitorId || '',
         })
         .then((response) => {
+          console.log('first line');
+
           //setCookie('user_id', parseJwtToken(response?.data?.access_token).sub);
           localStorage.setItem('user_id', parseJwtToken(response?.data?.access_token).sub);
-          contextData.setTracker(true);
+          console.log('after local');
+
+          console.log(contextData.setTracker(true));
+          console.log('asdad');
+
           if (values.rememberMe) {
             setCookie('access_token', response?.data?.access_token, {
               maxAge: 24 * 60 * 60 * 30,
@@ -173,6 +180,8 @@ export const LoginForm = (
             setCookie('access_token', response?.data?.access_token);
             setCookie('refresh_token', response?.data?.refresh_token);
           }
+          console.log('dsadsadsa');
+
           //ZK: Send the cookies to RN
           // @ts-ignore
           if (window.ReactNativeWebView) {
