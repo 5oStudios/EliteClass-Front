@@ -166,7 +166,7 @@ export const LoginForm = (
           localStorage.setItem('user_id', parseJwtToken(response?.data?.access_token).sub);
           console.log('after local');
 
-          console.log(contextData.setTracker(true));
+          // console.log(contextData.setTracker(true));
           console.log('asdad');
 
           if (values.rememberMe) {

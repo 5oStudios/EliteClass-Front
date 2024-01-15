@@ -98,7 +98,8 @@ export const QuizReport = () => {
           {
             <>
               {/* <Divider sx={{ borderColor: 'gray' }} /> */}
-              {data?.grade >= 0 && <Text>{t['your-grade']}</Text>}
+              {data?.grade >= 0 && data?.fullyMarked && <Text>{t['your-grade']}</Text>}
+              {data?.grade >= 0 && !data?.fullyMarked && <Text>{t['your-mcq-grade-is']}</Text>}
               <Text
                 sx={{
                   color:
@@ -118,6 +119,8 @@ export const QuizReport = () => {
                   '_'
                 )}
               </Text>
+              <br />
+              {data?.grade >= 0 && !data?.fullyMarked && <Text>{t.final}</Text>}
             </>
           }
           {/* <Space h="xl" /> */}

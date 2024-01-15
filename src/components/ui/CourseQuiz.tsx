@@ -168,7 +168,7 @@ export const CourseQuiz = () => {
     {
       onSuccess: (data) => {
         setResult(data);
-        console.log(result);
+        console.log(data);
 
         if (!isComplete) {
           handleMarkComplete({ class_id: class_id as string });
@@ -217,9 +217,16 @@ export const CourseQuiz = () => {
           }}
         >
           <Stack justify="center" sx={{ minHeight: 70, paddingLeft: 10 }}>
-            <Text align="center" size="xl" sx={{ color: '#298EAE' }}>
-              {t['your-grade-is']} {getResult.data?.grade_in_percent}
-            </Text>
+            {result?.result?.filter((el: any) => el.grade == null)?.length == 0 && (
+              <Text align="center" size="xl" sx={{ color: '#298EAE' }}>
+                {t['your-grade-is']} {getResult.data?.grade_in_percent}
+              </Text>
+            )}
+            {result?.result?.filter((el: any) => el.grade == null)?.length != 0 && (
+              <Text align="center" size="xl" sx={{ color: '#298EAE' }}>
+                {t['your-mcq-grade-is']} {getResult.data?.grade_in_percent} <br /> {t.final}
+              </Text>
+            )}
           </Stack>
         </Card>
       )}
@@ -251,7 +258,11 @@ export const CourseQuiz = () => {
                         <SimpleGrid
                           sx={{ gridTemplateColumns: '75% max-content', alignItems: 'end' }}
                         >
-                          <Text size="xs">{`${i + 1}- ${question.question}`}</Text>
+                          <Text size="xs">{`${i + 1}- ${question.question.replace(
+                            /%_&/g,
+                            '...............'
+                            // eslint-disable-next-line react/jsx-closing-tag-location
+                          )}`}</Text>
                           <Text
                             px={6}
                             py={2}
@@ -514,10 +525,13 @@ export const CourseQuiz = () => {
                       }}
                     />
                   )}
-                  {getResult.isSuccess && isAnswered(question.id) ? (
+                  {getResult.isSuccess &&
+                  result?.result[i]?.grade !== null &&
+                  isAnswered(question.id) ? (
                     <ResultCard correct={true} />
                   ) : (
-                    getResult.isSuccess && <ResultCard correct={false} />
+                    getResult.isSuccess &&
+                    result?.result[i]?.grade !== null && <ResultCard correct={false} />
                   )}
                 </Stack>
               ))}
