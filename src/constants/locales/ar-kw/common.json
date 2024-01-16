@@ -156,6 +156,8 @@
   "your-grade-is": "درجتك هي",
   "your-mcq-grade-is": "درجات اسئلة الاختيارات هي ",
   "final": "ستظهر الدرجة النهائية عند تصحيح المعلم الاسئلة المقالية",
+  "instructor-remark": "تعليق المعلم",
+  "instructor Remark will appear here when be available": "تعليق المعلم سيظهر هنا عندما يكون متاحا",
 
   "correct": "صحيح",
   "incorrect": "غير صحيح",

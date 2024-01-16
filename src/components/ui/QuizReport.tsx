@@ -123,6 +123,26 @@ export const QuizReport = () => {
               {data?.grade >= 0 && !data?.fullyMarked && <Text>{t.final}</Text>}
             </>
           }
+          {
+            <>
+              <Text>{t['instructor-remark']}</Text>
+              <Text
+                sx={{
+                  fontSize: 18,
+                  whiteSpace: 'nowrap',
+                }}
+                weight={200}
+              >
+                {isLoading ? (
+                  <Skeleton height={25} width={40} />
+                ) : data?.remark !== null ? (
+                  data?.remark?.content
+                ) : (
+                  <Text> {t['instructor Remark will appear here when be available']} </Text>
+                )}
+              </Text>
+            </>
+          }
           {/* <Space h="xl" /> */}
           {isLoading ? (
             <Skeleton height={40} width="80%" m="auto" />
