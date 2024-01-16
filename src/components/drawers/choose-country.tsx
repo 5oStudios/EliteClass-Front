@@ -164,6 +164,7 @@ export const ChooseCountry = ({ closeDrawer, setValue, setItemID, countries }: P
                       country?.image ||
                       `https://ui-avatars.com/api/?bold=true&background=D8DDE7&rounded=true&format=png&size=256&name=${country?.title}`
                     }
+                    alt="Country"
                     fallbackSrc={`https://ui-avatars.com/api/?bold=true&background=D8DDE7&rounded=true&format=png&size=256&name=${country?.title}`}
                     placeholder="blur"
                     blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}

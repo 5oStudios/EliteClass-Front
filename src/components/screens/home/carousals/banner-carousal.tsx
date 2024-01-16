@@ -21,9 +21,9 @@ const Card1 = (props: any) => {
         height: 150,
         borderRadius: 8,
         position: 'relative',
-        
+
         img: {
-          objectFit: "fill",
+          objectFit: 'fill',
         },
 
         '@media screen and (min-width: 740px)': {
@@ -36,6 +36,7 @@ const Card1 = (props: any) => {
       }}
     >
       <NextImage
+        alt="image"
         src={defaul ? '/assets/images/default.png' : props?.carddata?.image}
         layout="fill"
         placeholder="blur"
@@ -52,6 +53,11 @@ export const BannerCarousal = (props: any) => {
   let cards = [];
   cards = props?.bCarousal;
 
+  const handleClick = (item: any) => {
+    if (item.link !== null) {
+      window.open(item.link, '_blank');
+    }
+  };
   return (
     <Container
       p={0}
@@ -79,7 +85,12 @@ export const BannerCarousal = (props: any) => {
         }}
       >
         {cards?.map((item: any, index: any) => (
-          <SwiperSlide key={index}>
+          <SwiperSlide
+            key={index}
+            onClick={() => {
+              handleClick(item);
+            }}
+          >
             <Card1 key={item?.id} carddata={item} />
           </SwiperSlide>
         ))}

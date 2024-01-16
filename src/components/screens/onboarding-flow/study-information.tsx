@@ -162,7 +162,7 @@ export const StudyInformation = ({ data }: any) => {
     axios
       .get('category?secret=11f24438-b63a-4de2-ae92-e1a1048706f5')
       .then((response) => {
-        // console.log(response);
+        console.log(response);
         setCountries(response.data.category);
       })
       .catch((error) => {
