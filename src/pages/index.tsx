@@ -9,7 +9,7 @@ import { MainLayout } from '@/components/layouts/MainLayout';
 import { getHomeContent } from '@/utils/axios/getHomeContent';
 import { SearchResults } from '@/components/ui/search-results';
 import { useRouter } from 'next/router';
-import { OverdueModal } from '@/components/modals/overdue-modal';
+import { UpcomingSettlements } from '@/components/drawers/upcoming-settlements';
 
 export const HomePage = ({
   initialData,
@@ -61,7 +61,7 @@ export const HomePage = ({
             </Box>
           </SimpleGrid>
         </Container>
-        <OverdueModal />
+        <UpcomingSettlements />
       </main>
     </>
   );

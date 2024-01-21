@@ -18,6 +18,7 @@ const moduleExports = {
       'localhost',
       'lmsbe.enegix.co',
       'dash.staging.elite-class.com',
+      'img.icons8.com',
     ], // Modify this line as needed
   },
   publicRuntimeConfig: {
