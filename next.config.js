@@ -17,6 +17,7 @@ const moduleExports = {
       'ui-avatars.com',
       'localhost',
       'lmsbe.enegix.co',
+      'dash.staging.elite-class.com',
     ], // Modify this line as needed
   },
   publicRuntimeConfig: {
