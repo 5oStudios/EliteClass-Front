@@ -8,7 +8,6 @@ import {
   Radio,
   RadioGroup,
   RangeSlider,
-  ScrollArea,
   Stack,
   Text,
   useMantineColorScheme,
@@ -204,7 +203,6 @@ export const FilterDrawer = (props: Props) => {
               </Group>
             </Stack>
           )}
-
           <Button
             id="btn-filterApply"
             size="md"

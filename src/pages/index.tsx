@@ -9,6 +9,7 @@ import { MainLayout } from '@/components/layouts/MainLayout';
 import { getHomeContent } from '@/utils/axios/getHomeContent';
 import { SearchResults } from '@/components/ui/search-results';
 import { useRouter } from 'next/router';
+import { OverdueModal } from '@/components/modals/overdue-modal';
 
 export const HomePage = ({
   initialData,
@@ -29,7 +30,6 @@ export const HomePage = ({
       setShowSearchResults(false);
     }
   }, [params]);
-
 
   return (
     <>
@@ -61,6 +61,7 @@ export const HomePage = ({
             </Box>
           </SimpleGrid>
         </Container>
+        <OverdueModal />
       </main>
     </>
   );
