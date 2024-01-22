@@ -35,6 +35,7 @@ type Props = {
   title: any;
   image: string;
   total_courses: number;
+  discountAmount: number;
   price: any;
   discount_price: any;
   layoutGrid?: boolean;
@@ -56,6 +57,7 @@ const Layout1 = ({
   title,
   price,
   total_courses,
+  discountAmount,
   discount_price,
   blurDataUrl,
   href,
@@ -136,7 +138,7 @@ const Layout1 = ({
               <AspectRatio
                 ratio={16 / 9}
                 mx="auto"
-                sx={{ width: '100%', overflow: 'hidden', borderRadius: 9 }}
+                sx={{ width: '100%', overflow: 'hidden', borderRadius: 9, position: 'relative' }}
               >
                 <NextImage
                   src={img}
@@ -148,15 +150,35 @@ const Layout1 = ({
                     setImg('/assets/images/default.png');
                   }}
                 />
+                {true && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      width: '45px',
+                      height: '30px',
+                      backgroundColor: 'red',
+                      color: 'white',
+                      borderBottomRightRadius: '15px', // Bottom right corner
+
+                      fontSize: '10px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <span>{discountAmount}</span>
+                  </div>
+                )}
               </AspectRatio>
             </MediaQuery>
             <MediaQuery largerThan="xs" styles={{ display: 'none' }}>
               <AspectRatio
                 ratio={ratio || 16 / 9}
                 mx="auto"
-                sx={{ width: '100%', overflow: 'hidden', borderRadius: 9 }}
+                sx={{ width: '100%', overflow: 'hidden', borderRadius: 9, position: 'relative' }}
               >
                 <NextImage
+                  alt="image"
                   src={img}
                   objectFit="cover"
                   layout="fill"
@@ -166,6 +188,25 @@ const Layout1 = ({
                     setImg('/assets/images/default.png');
                   }}
                 />
+                {true && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      width: '45px',
+                      height: '30px',
+                      backgroundColor: 'red',
+                      color: 'white',
+                      borderBottomRightRadius: '15px', // Bottom right corner
+
+                      fontSize: '10px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <span>{discountAmount}</span>
+                  </div>
+                )}
               </AspectRatio>
             </MediaQuery>
             <Text
