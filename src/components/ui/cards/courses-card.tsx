@@ -137,6 +137,7 @@ const Layout1 = ({
                 sx={{ width: '100%', overflow: 'hidden', borderRadius: 9 }}
               >
                 <NextImage
+                  alt="image"
                   src={img}
                   objectFit="cover"
                   layout="fill"
@@ -155,6 +156,7 @@ const Layout1 = ({
                 sx={{ width: '100%', overflow: 'hidden', borderRadius: 9 }}
               >
                 <NextImage
+                  alt="image"
                   src={img}
                   objectFit="cover"
                   layout="fill"
@@ -227,6 +229,7 @@ const Layout2 = ({
           >
             <Box>
               <NextImage
+                alt="image"
                 style={{ cursor: 'pointer' }}
                 src={img}
                 objectFit="cover"

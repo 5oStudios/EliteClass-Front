@@ -123,20 +123,20 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       duration: [0, 500],
       search: search as string,
       auth: access_token,
-      //@ts-ignore
       ...(access_token === undefined && {
+        //@ts-ignore
         category_id: JSON.parse(initial_country).id,
       }),
-      //@ts-ignore
       ...(access_token === undefined && {
+        //@ts-ignore
         scnd_category_id: JSON.parse(initial_type).id,
       }),
-      //@ts-ignore
       ...(access_token === undefined && {
+        //@ts-ignore
         sub_category: JSON.parse(initial_stage).id,
       }),
-      //@ts-ignore
       ...(access_token === undefined && {
+        //@ts-ignore
         ch_sub_category: JSON.parse(initial_major).id,
       }),
     });

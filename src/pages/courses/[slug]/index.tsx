@@ -100,6 +100,8 @@ const CourseDetails: NextPage = () => {
         is_bundle: isBundled,
         secret: '11f24438-b63a-4de2-ae92-e1a1048706f5',
       });
+      console.log(response);
+
       if (
         response.data.course.discount_type !== null &&
         response.data.course.discount_price !== 0

@@ -31,7 +31,6 @@ import en from '@/src/constants/locales/en-us/common.json';
 import ar from '@/src/constants/locales/ar-kw/common.json';
 // @ts-ignore
 import EllipsisText from 'react-ellipsis-text';
-import { route } from 'next/dist/server/router';
 
 type Props = {
   title: any;
@@ -41,6 +40,7 @@ type Props = {
   price: any;
   discount_price: any;
   layoutGrid?: boolean;
+  haveOffer?: boolean;
   in_wishlist?: boolean;
   href: string;
   id: string;
@@ -60,6 +60,7 @@ const Layout1 = ({
   price,
   total_courses,
   discountAmount,
+  haveOffer,
   discount_price,
   blurDataUrl,
   href,
@@ -143,6 +144,7 @@ const Layout1 = ({
                 sx={{ width: '100%', overflow: 'hidden', borderRadius: 9, position: 'relative' }}
               >
                 <NextImage
+                  alt="image"
                   src={img}
                   objectFit="cover"
                   layout="fill"
@@ -152,7 +154,7 @@ const Layout1 = ({
                     setImg('/assets/images/default.png');
                   }}
                 />
-                {true && <DiscountBadge value={`${discountAmount}`} dir={'left'} />}
+                {haveOffer && <DiscountBadge value={`${discountAmount}`} dir={'left'} />}
               </AspectRatio>
             </MediaQuery>
             <MediaQuery largerThan="xs" styles={{ display: 'none' }}>
@@ -172,7 +174,7 @@ const Layout1 = ({
                     setImg('/assets/images/default.png');
                   }}
                 />
-                {true && <DiscountBadge value={`${discountAmount}`} dir={'left'} />}
+                {haveOffer && <DiscountBadge value={`${discountAmount}`} dir={'left'} />}
               </AspectRatio>
             </MediaQuery>
             <Text
@@ -252,6 +254,7 @@ const Layout2 = ({
           >
             <Box>
               <NextImage
+                alt="image"
                 src={img}
                 layout="fill"
                 objectFit="cover"
