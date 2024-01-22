@@ -1,9 +1,10 @@
-import { Badge, Button, Card, Checkbox, Group, Stack, Text } from '@mantine/core';
+import { Button, Card, Checkbox, Group, Stack, Text } from '@mantine/core';
 import { useState } from 'react';
 import { BaseDrawerWrapper } from '@/components/drawers/base-drawer-wrapper';
 import { useRouter } from 'next/router';
 import ar from '@/i18n/ar/common.json';
 import en from '@/i18n/en/common.json';
+import { DiscountBadge } from '@/components/badges/discount-badge';
 
 const overdueCoursesMock = [
   {
@@ -126,18 +127,7 @@ function UpcomingSettlementCourseCard({
             }}
           />
         </Group>
-        <Badge
-          sx={{
-            width: 'fit-content',
-            position: 'absolute',
-            right: 0,
-            top: 0,
-            borderRadius: '0 0 0 8px',
-          }}
-          color="orange"
-        >
-          {price} KD
-        </Badge>
+        <DiscountBadge price={`${price} KB`} dir={'right'} />
       </Stack>
     </Card>
   );
