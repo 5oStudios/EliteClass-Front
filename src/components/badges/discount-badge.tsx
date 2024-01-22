@@ -1,13 +1,12 @@
 import { Badge, BadgeProps } from '@mantine/core';
 
 interface DiscountBadge {
-  price: string | number;
+  value: string | number;
   dir: 'left' | 'right';
 }
 export const DiscountBadge = (props: BadgeProps<any> & DiscountBadge) => {
   return (
     <Badge
-      {...props}
       sx={{
         width: 'fit-content',
         position: 'absolute',
@@ -16,8 +15,9 @@ export const DiscountBadge = (props: BadgeProps<any> & DiscountBadge) => {
         borderRadius: '0 0 0 8px',
       }}
       color="orange"
+      {...props}
     >
-      {props.price}
+      {props.value}
     </Badge>
   );
 };
