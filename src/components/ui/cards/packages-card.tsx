@@ -24,6 +24,8 @@ import { showNotification } from '@mantine/notifications';
 import { getCookie } from 'cookies-next';
 import { useQueryClient } from 'react-query';
 import useNextBlurhash from 'use-next-blurhash';
+import { DiscountBadge } from '@/components/badges/discount-badge';
+
 import { shimmer, toBase64 } from '@/utils/utils';
 import en from '@/src/constants/locales/en-us/common.json';
 import ar from '@/src/constants/locales/ar-kw/common.json';
@@ -150,25 +152,7 @@ const Layout1 = ({
                     setImg('/assets/images/default.png');
                   }}
                 />
-                {true && (
-                  <div
-                    style={{
-                      position: 'absolute',
-                      width: '45px',
-                      height: '30px',
-                      backgroundColor: 'red',
-                      color: 'white',
-                      borderBottomRightRadius: '15px', // Bottom right corner
-
-                      fontSize: '10px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <span>{discountAmount}</span>
-                  </div>
-                )}
+                {true && <DiscountBadge value={`${discountAmount}`} dir={'left'} />}
               </AspectRatio>
             </MediaQuery>
             <MediaQuery largerThan="xs" styles={{ display: 'none' }}>
@@ -188,25 +172,7 @@ const Layout1 = ({
                     setImg('/assets/images/default.png');
                   }}
                 />
-                {true && (
-                  <div
-                    style={{
-                      position: 'absolute',
-                      width: '45px',
-                      height: '30px',
-                      backgroundColor: 'red',
-                      color: 'white',
-                      borderBottomRightRadius: '15px', // Bottom right corner
-
-                      fontSize: '10px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <span>{discountAmount}</span>
-                  </div>
-                )}
+                {true && <DiscountBadge value={`${discountAmount}`} dir={'left'} />}
               </AspectRatio>
             </MediaQuery>
             <Text
