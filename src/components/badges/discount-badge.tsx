@@ -12,7 +12,7 @@ export const DiscountBadge = (props: BadgeProps<any> & DiscountBadge) => {
         position: 'absolute',
         [props.dir]: 0,
         top: 0,
-        borderRadius: '0 0 0 8px',
+        borderRadius: props.dir === 'right' ? '0 0 0 10px' : '0 0 10px 0',
       }}
       color="orange"
       {...props}
