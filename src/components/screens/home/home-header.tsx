@@ -158,6 +158,27 @@ export const HomeHeader = ({
       enabled: false,
       keepPreviousData: true,
       onSuccess: (data) => {
+        data.packages.data.forEach((el: any) => {
+          if (el.discount_type !== null && el.discount_price !== 0) {
+            el.haveOffer = true;
+            if (el.discountType === 'fixed') {
+              el.discount_price = el.price - el.discount_price;
+            } else {
+              el.discount_price = ((100 - el.discount_price) / 100) * el.price;
+            }
+          }
+        });
+        data.courses.data.forEach((el: any) => {
+          if (el.discount_type !== null && el.discount_price !== 0) {
+            el.haveOffer = true;
+            if (el.discountType === 'fixed') {
+              el.discount_price = el.price - el.discount_price;
+            } else {
+              el.discount_price = ((100 - el.discount_price) / 100) * el.price;
+            }
+          }
+        });
+
         setApplyFilters(false);
         setSearchData(data);
       },

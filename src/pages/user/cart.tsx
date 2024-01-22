@@ -142,6 +142,16 @@ export const Cart = () => {
     axios
       .get('show/cart')
       .then((res: any) => {
+        res.data.cart.forEach((el: any) => {
+          if (el.discountType !== null && el.price !== 0) {
+            el.haveOffer = true;
+            if (el.discountType === 'fixed') {
+              el.price = el.originalPrice - el.price;
+            } else {
+              el.price = ((100 - el.price) / 100) * el.originalPrice;
+            }
+          }
+        });
         setCart(res.data);
         //const msg = !res?.data?.message ? false : true;
         setShowMsg(res?.data?.show_message);
@@ -218,7 +228,7 @@ export const Cart = () => {
         for (let index = 0; index < counter.length; index++) {
           const element = counter[index];
           if (element.id == item) {
-            count += parseInt(element.amount);
+            count += Number(element.amount);
           }
         }
       });
@@ -648,7 +658,11 @@ export const Cart = () => {
                               <Radio value="KNET" label={t.booking.card} />
                             ) : null} */}
                             <Radio id="rdb-paymentKnet" value="KNET" label={'KNET'} />
-                            <Radio id="rdb-paymentVisaMaster" value="VISA/MASTER" label={'VISA/MASTER'} />
+                            <Radio
+                              id="rdb-paymentVisaMaster"
+                              value="VISA/MASTER"
+                              label={'VISA/MASTER'}
+                            />
                             {/* <Radio value="wallet" label={t.booking['by-wallet']} /> */}
                             {/* 👆 Wallet has been removed from the app */}
                           </RadioGroup>
@@ -663,7 +677,7 @@ export const Cart = () => {
                               }}
                               size="xs"
                             >
-                              {parseInt(walletBalance?.corrent_balance || 0)}{' '}
+                              {Number(walletBalance?.corrent_balance || 0)}{' '}
                               {walletBalance?.currency}
                             </Text>
                           )} */}
@@ -682,7 +696,7 @@ export const Cart = () => {
                         </Text>
                         <Group spacing={3}>
                           <Text size="xs" sx={{ color: '#298EAE' }}>
-                            {`${parseInt(cart?.price_total || 0)}`}
+                            {`${Number(cart?.price_total || 0)}`}
                           </Text>
                           <Text size="xs" sx={{ color: '#298EAE' }}>
                             {`KWD`}
@@ -699,7 +713,7 @@ export const Cart = () => {
                         </Text>
                         <Group spacing={3}>
                           <Text size="xs" sx={{ color: '#298EAE' }}>
-                            {parseInt(cart?.cpn_discount || 0)}
+                            {Number(cart?.cpn_discount || 0)}
                           </Text>
                           <Text size="xs" sx={{ color: '#298EAE' }}>
                             KWD
@@ -738,8 +752,8 @@ export const Cart = () => {
                               ? cart?.knet_total || 0
                               : paymentCard == 'VISA/MASTER'
                               ? cart?.visa_master_total || 0
-                              : parseInt(cart?.after_discount || 0)}
-                            {/* {`${ parseInt(cart?.after_discount || 0)}`} */}
+                              : Number(cart?.after_discount || 0)}
+                            {/* {`${ Number(cart?.after_discount || 0)}`} */}
                           </Text>
                           <Text size="xs" sx={{ color: '#000000' }} weight={500}>
                             {`KWD`}

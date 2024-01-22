@@ -256,7 +256,7 @@ const CartItem = ({
           },
         };
       } else {
-        obj = { cart_coupon_id: parseInt(data?.cart_coupon_id) };
+        obj = { cart_coupon_id: Number(data?.cart_coupon_id) };
         config = {
           method: 'post',
           url: 'cart/coupon',
@@ -282,7 +282,7 @@ const CartItem = ({
             url: 'cart/coupon',
             data: {
               course_id: item?.type_id,
-              installment_id: parseInt(couponData?.id),
+              installment_id: Number(couponData?.id),
               ...obj,
             },
           };
@@ -303,7 +303,7 @@ const CartItem = ({
             url: 'cart/coupon',
             data: {
               bundle_id: item?.type_id,
-              installment_id: parseInt(couponData?.id),
+              installment_id: Number(couponData?.id),
               ...obj,
             },
           };
@@ -637,8 +637,8 @@ const CartItem = ({
                     <Text sx={{ fontSize: 12 }}>{t.booking['full-payment']}</Text>
                     {paymentMethod == 'full' && (
                       <Text sx={{ fontSize: 14 }} weight={500} color={'#298EAE'}>
-                        {parseInt(item?.price || 0) > 0
-                          ? `${parseInt(item?.price || 0)} KWD`
+                        {Number(item?.price || 0) > 0
+                          ? `${Number(item?.price || 0)} KWD`
                           : t.free.toUpperCase()}
                       </Text>
                     )}
@@ -688,9 +688,20 @@ const CartItem = ({
                   <Text sx={{ fontSize: 12, color: '#000000' }}>{t.booking['full-payment']}</Text>
                   {paymentMethod == 'full' && (
                     <Text sx={{ fontSize: 14 }} weight={500} color={'#298EAE'}>
-                      {parseInt(item?.price || 0) > 0
-                        ? `${parseInt(item?.price || 0)} KWD`
+                      {Number(item?.price || 0) > 0
+                        ? `${Number(item?.price || 0)} KWD`
                         : t.free.toUpperCase()}
+                      {item?.haveOffer && (
+                        <span
+                          style={{
+                            color: 'red',
+                            textDecoration: 'line-through',
+                            marginLeft: '5px',
+                          }}
+                        >
+                          {`  ${item?.originalPrice} KWD`}
+                        </span>
+                      )}
                     </Text>
                   )}
                 </Group>
@@ -745,7 +756,7 @@ const CartItem = ({
                                     fontWeight: 500,
                                   }}
                                 >
-                                  {`${parseInt(items?.amount || 0)}KWD`}.
+                                  {`${Number(items?.amount || 0)}KWD`}.
                                 </span>
                               </Text>
                               <Text sx={{ fontSize: '10px', color: '#000000' }}>
@@ -844,7 +855,7 @@ const CartItem = ({
                               fontWeight: 500,
                             }}
                           >
-                            {`${parseInt(item?.installments?.[0]?.amount || 0)}KWD`}.
+                            {`${Number(item?.installments?.[0]?.amount || 0)}KWD`}.
                           </span>
                         </Text>
                         <Text sx={{ fontSize: '10px', color: '#000000' }}>
@@ -908,7 +919,7 @@ const CartItem = ({
                               fontWeight: 500,
                             }}
                           >
-                            {`${parseInt(item?.installments?.[1]?.amount || 0)}KWD`}.
+                            {`${Number(item?.installments?.[1]?.amount || 0)}KWD`}.
                           </span>
                         </Text>
                         <Text sx={{ fontSize: '10px', color: '#000000' }}>
@@ -976,7 +987,7 @@ const CartItem = ({
                               fontWeight: 500,
                             }}
                           >
-                            {`${parseInt(item?.installments?.[2]?.amount || 0)}KWD`}.
+                            {`${Number(item?.installments?.[2]?.amount || 0)}KWD`}.
                           </span>
                         </Text>
                         <Text sx={{ fontSize: '10px', color: '#000000' }}>
@@ -1004,7 +1015,7 @@ const CartItem = ({
           </Box>
         </Card>
         {/* (item?.type === 'course' || item?.type === 'package' || item?.type==='offline_session' || item?.type==='meeting') && */}
-        {parseInt(item?.price || 0) > 0 && (
+        {Number(item?.price || 0) > 0 && (
           <Stack
             sx={{
               flexDirection: 'row',

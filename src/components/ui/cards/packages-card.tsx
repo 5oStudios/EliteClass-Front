@@ -183,9 +183,9 @@ const Layout1 = ({
             </Text>
             <Group position="apart" spacing={7} noWrap>
               <Text weight={500} size="xs" sx={(theme) => ({ color: theme?.other?.blueToPrimary })}>
-                {parseInt(discount_price || 0) == 0
+                {Number(discount_price || 0) == 0
                   ? `${t.free}`
-                  : `${parseInt(discount_price || 0)}KWD`}
+                  : `${Number(discount_price || 0)}KWD`}
               </Text>
               <Text
                 sx={(theme) => ({
@@ -194,7 +194,7 @@ const Layout1 = ({
                   fontSize: 12,
                 })}
               >
-                {parseInt(price || 0)}
+                {Number(price || 0)}
                 KWD
               </Text>
             </Group>
@@ -308,9 +308,9 @@ const Layout2 = ({
               </Text>
               <Group position="apart" noWrap>
                 <Text weight={500} sx={(theme) => ({ color: theme?.other?.blueToPrimary })}>
-                  {parseInt(discount_price || 0) == 0
+                  {Number(discount_price || 0) == 0
                     ? `${t.free}`
-                    : `${parseInt(discount_price || 0)}KWD`}
+                    : `${Number(discount_price || 0)}KWD`}
                 </Text>
                 <Text
                   sx={(theme) => ({
@@ -319,7 +319,7 @@ const Layout2 = ({
                     fontSize: 12,
                   })}
                 >
-                  {parseInt(price || 0)}
+                  {Number(price || 0)}
                   KWD
                 </Text>
               </Group>
