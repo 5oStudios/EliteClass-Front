@@ -209,6 +209,17 @@ const CartItem = ({
     };
     axios(config)
       .then((res) => {
+        //here handle discount
+        res.data.cart.forEach((el: any) => {
+          if (el.discountType !== null && el.price !== 0) {
+            el.haveOffer = true;
+            if (el.discountType === 'fixed') {
+              el.price = el.originalPrice - el.price;
+            } else {
+              el.price = ((100 - el.price) / 100) * el.originalPrice;
+            }
+          }
+        });
         processing(false);
         updatedCart(res?.data);
         setMsg(res?.data?.message);
