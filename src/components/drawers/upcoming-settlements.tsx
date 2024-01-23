@@ -1,4 +1,4 @@
-import { Button, Card, Checkbox, Group, Stack, Text } from '@mantine/core';
+import { Button, Card, Checkbox, Group, Stack, Text, useMantineColorScheme } from '@mantine/core';
 import { useState } from 'react';
 import { BaseDrawerWrapper } from '@/components/drawers/base-drawer-wrapper';
 import { useRouter } from 'next/router';
@@ -67,7 +67,7 @@ export const UpcomingSettlements = () => {
           overflowY: 'scroll',
           maxHeight: 'calc(100vh - 200px)',
         }}
-        spacing={5}
+        spacing={6}
       >
         {overdueCourses}
       </Stack>
@@ -93,19 +93,30 @@ function UpcomingSettlementCourseCard({
   price,
 }: Readonly<AccordionLabelProps>) {
   const [checked, setChecked] = useState(false);
+  const preferredColorScheme = useMantineColorScheme();
+  const darkMode = preferredColorScheme.colorScheme === 'dark';
+
+  const handleCardBorder = () => {
+    if (darkMode) {
+      return checked ? '1px solid gray' : '1px solid #333333';
+    } else {
+      // light mode
+      return checked ? '1px solid #EDD491' : '1px solid #E5E5E5';
+    }
+  };
   return (
     <Card
       radius="md"
       withBorder
       sx={{
-        border: checked ? '1px solid #EDD491' : '1px solid #EDEDED', // TODO: use theme colors
+        border: handleCardBorder(),
         overflow: 'hidden',
         minHeight: '100px',
       }}
       color={checked ? 'gray' : 'blue'}
       onClick={() => setChecked((c) => !c)}
     >
-      <Stack spacing={3}>
+      <Stack spacing={5}>
         {/*<Avatar src={image} size="lg" />*/}
         <Text size={'sm'}>{title}</Text>
         <Group
@@ -120,6 +131,11 @@ function UpcomingSettlementCourseCard({
             {due_date}
           </Text>
           <Checkbox
+            color={darkMode ? 'gray' : ''}
+            sx={{
+              border: darkMode ? '1px solid gray' : '',
+              borderRadius: '5px',
+            }}
             checked={checked}
             onChange={(event) => setChecked(event.target.checked)}
             wrapperProps={{
