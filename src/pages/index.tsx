@@ -10,6 +10,7 @@ import { getHomeContent } from '@/utils/axios/getHomeContent';
 import { SearchResults } from '@/components/ui/search-results';
 import { useRouter } from 'next/router';
 import { UpcomingSettlements } from '@/components/drawers/upcoming-settlements';
+import { UpdateAppModal } from '@/components/modals/update-app';
 
 export const HomePage = ({
   initialData,
@@ -62,6 +63,7 @@ export const HomePage = ({
           </SimpleGrid>
         </Container>
         <UpcomingSettlements />
+        <UpdateAppModal />
       </main>
     </>
   );

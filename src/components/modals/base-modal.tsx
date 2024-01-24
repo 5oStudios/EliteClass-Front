@@ -23,12 +23,12 @@ export const BaseModalWrapper = ({
       opened={opened}
       onClose={close}
       centered={true}
-      overlayBlur={3}
-      overlayOpacity={0.8}
+      overlayBlur={2}
+      overlayOpacity={0.4}
       closeOnClickOutside
     >
       {content}
-      <Box mt={12} />
+      <Box mt={32} />
       {footer}
     </Modal>
   );
