@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import ar from '@/i18n/ar/common.json';
 import en from '@/i18n/en/common.json';
 import { DiscountBadge } from '@/components/badges/discount-badge';
+import { useUpcommingSettelements } from '@/src/hooks/useUpcommingSettelements';
 
 const overdueCoursesMock = [
   {
@@ -39,28 +40,15 @@ interface AccordionLabelProps {
 }
 
 export const UpcomingSettlements = () => {
-  const overdueCourses = overdueCoursesMock.map((course) => (
+  const router = useRouter();
+  const { courses } = useUpcommingSettelements();
+  if (!courses || courses.length == 0) return null;
+  const overdueCourses = courses.map((course) => (
     <UpcomingSettlementCourseCard key={course.id} {...course} />
   ));
-  const router = useRouter();
+
   const t = router.locale === 'ar-kw' ? ar : en;
   return (
-    // <BaseModalWrapper
-    //   title={'Payment Overdue'}
-    //   open={true}
-    //   content={<Stack spacing={5}>{overdueCourses}</Stack>}
-    //   footer={
-    //     <Group spacing={12} position="right">
-    //       <Button variant="light" loading={false}>
-    //         Skip
-    //       </Button>
-    //       <Button variant="filled" loading={false}>
-    //         Pay Now
-    //       </Button>
-    //     </Group>
-    //   }
-    // />
-
     <BaseDrawerWrapper title={t['upcoming-settlements']}>
       <Stack
         sx={{
