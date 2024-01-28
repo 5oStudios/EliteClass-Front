@@ -372,5 +372,11 @@
     "apply-coupon": "تطبيق رمز القسيمة",
     "coupon-discount-amount": "مبلغ خصم القسيمة"
   },
-  "upcoming-settlements": "التسويات القادمة"
+  "upcoming-settlements": "التسويات القادمة",
+  "update-app-modal": {
+    "title": "تحديث التطبيق",
+    "description": "تحديث التطبيق للحصول على أحدث الميزات والتحسينات.",
+    "update": "تحديث",
+    "later": "لاحقا"
+  }
 }

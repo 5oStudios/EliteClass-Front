@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Card, Checkbox, Group, Stack, Text } from '@mantine/core';
+import { Button, Card, Checkbox, Group, Stack, Text, useMantineColorScheme } from '@mantine/core';
 import { BaseDrawerWrapper } from '@/components/drawers/base-drawer-wrapper';
 import { useRouter } from 'next/router';
 import ar from '@/i18n/ar/common.json';
@@ -47,7 +47,7 @@ export const UpcomingSettlements = (props: { upcomingInstallments: AccordionLabe
           overflowY: 'scroll',
           maxHeight: 'calc(100vh - 200px)',
         }}
-        spacing={5}
+        spacing={6}
       >
         {overdueCourses}
       </Stack>
@@ -72,6 +72,17 @@ function UpcomingSettlementCourseCard({
   onCardCheck,
 }: UpcomingSettlementCourseCardProps) {
   const [checked, setChecked] = useState(false);
+  const preferredColorScheme = useMantineColorScheme();
+  const darkMode = preferredColorScheme.colorScheme === 'dark';
+
+  const handleCardBorder = () => {
+    if (darkMode) {
+      return checked ? '1px solid gray' : '1px solid #333333';
+    } else {
+      // light mode
+      return checked ? '1px solid #EDD491' : '1px solid #E5E5E5';
+    }
+  };
 
   const handleCheckboxChange = () => {
     setChecked(!checked);
@@ -83,14 +94,14 @@ function UpcomingSettlementCourseCard({
       radius="md"
       withBorder
       sx={{
-        border: checked ? '1px solid #EDD491' : '1px solid #EDEDED',
+        border: handleCardBorder(),
         overflow: 'hidden',
         minHeight: '100px',
       }}
       color={checked ? 'gray' : 'blue'}
       onClick={() => handleCheckboxChange()}
     >
-      <Stack spacing={3}>
+      <Stack spacing={5}>
         <Text size={'sm'}>{title}</Text>
         <Group
           sx={{
@@ -104,6 +115,11 @@ function UpcomingSettlementCourseCard({
             {due_date}
           </Text>
           <Checkbox
+            color={darkMode ? 'gray' : ''}
+            sx={{
+              border: darkMode ? '1px solid gray' : '',
+              borderRadius: '5px',
+            }}
             checked={checked}
             onChange={handleCheckboxChange}
             wrapperProps={{

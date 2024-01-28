@@ -9,7 +9,8 @@ import { MainLayout } from '@/components/layouts/MainLayout';
 import { getHomeContent } from '@/utils/axios/getHomeContent';
 import { SearchResults } from '@/components/ui/search-results';
 import { useRouter } from 'next/router';
-import axios from '@/components/axios/axios.js';
+
+import { UpdateAppModal } from '@/components/modals/update-app';
 
 export const HomePage = ({
   initialData,
@@ -61,6 +62,7 @@ export const HomePage = ({
             </Box>
           </SimpleGrid>
         </Container>
+        <UpdateAppModal />
       </main>
     </>
   );
