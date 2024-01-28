@@ -9,7 +9,7 @@ import { MainLayout } from '@/components/layouts/MainLayout';
 import { getHomeContent } from '@/utils/axios/getHomeContent';
 import { SearchResults } from '@/components/ui/search-results';
 import { useRouter } from 'next/router';
-import { UpcomingSettlements } from '@/components/drawers/upcoming-settlements';
+import axios from '@/components/axios/axios.js';
 
 export const HomePage = ({
   initialData,
@@ -61,7 +61,6 @@ export const HomePage = ({
             </Box>
           </SimpleGrid>
         </Container>
-        <UpcomingSettlements />
       </main>
     </>
   );

@@ -1,66 +1,46 @@
-import { Button, Card, Checkbox, Group, Stack, Text } from '@mantine/core';
 import { useState } from 'react';
+import { Button, Card, Checkbox, Group, Stack, Text } from '@mantine/core';
 import { BaseDrawerWrapper } from '@/components/drawers/base-drawer-wrapper';
 import { useRouter } from 'next/router';
 import ar from '@/i18n/ar/common.json';
 import en from '@/i18n/en/common.json';
 import { DiscountBadge } from '@/components/badges/discount-badge';
 
-const overdueCoursesMock = [
-  {
-    id: '1',
-    // image: 'http://dash.staging.elite-class.com/images/course/duplicate1696136176.jpg',
-    title: 'Ch01 Engineers: Professionals for the Human Good',
-    due_date: '2023-11-20',
-    price: 10,
-  },
-  {
-    id: '2',
-    // image: 'https://img.icons8.com/clouds/256/000000/futurama-mom.png',
-    title: 'Ch01 Engineers: Professionals for the Human Good',
-    due_date: '2023-11-20',
-    price: 15,
-  },
-  {
-    id: '3',
-    // image: 'https://img.icons8.com/clouds/256/000000/homer-simpson.png',
-    title: 'Ch01 Engineers: Professionals for the Human Good',
-    due_date: '2023-11-20',
-    price: 43,
-  },
-];
-
 interface AccordionLabelProps {
   id: string;
   title: string;
-  // image: string;
   due_date: string;
   price: number;
 }
 
-export const UpcomingSettlements = () => {
-  const overdueCourses = overdueCoursesMock.map((course) => (
-    <UpcomingSettlementCourseCard key={course.id} {...course} />
-  ));
+export const UpcomingSettlements = (props: { upcomingInstallments: AccordionLabelProps[] }) => {
+  const { upcomingInstallments } = props;
   const router = useRouter();
   const t = router.locale === 'ar-kw' ? ar : en;
-  return (
-    // <BaseModalWrapper
-    //   title={'Payment Overdue'}
-    //   open={true}
-    //   content={<Stack spacing={5}>{overdueCourses}</Stack>}
-    //   footer={
-    //     <Group spacing={12} position="right">
-    //       <Button variant="light" loading={false}>
-    //         Skip
-    //       </Button>
-    //       <Button variant="filled" loading={false}>
-    //         Pay Now
-    //       </Button>
-    //     </Group>
-    //   }
-    // />
 
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  const handleCardCheck = (id: string) => {
+    setSelectedIds((prevIds) =>
+      prevIds.includes(id) ? prevIds.filter((prevId) => prevId !== id) : [...prevIds, id]
+    );
+  };
+
+  const handlePayNow = () => {
+    // Use the selectedIds array to send data to the API
+    console.log('Selected IDs:', selectedIds);
+    // Add your API call logic here
+  };
+
+  const overdueCourses = upcomingInstallments.map((course) => (
+    <UpcomingSettlementCourseCard
+      key={course.id}
+      {...course}
+      onCardCheck={() => handleCardCheck(course.id)}
+    />
+  ));
+
+  return (
     <BaseDrawerWrapper title={t['upcoming-settlements']}>
       <Stack
         sx={{
@@ -72,13 +52,7 @@ export const UpcomingSettlements = () => {
         {overdueCourses}
       </Stack>
       <Group spacing={12} position="right" mt={12}>
-        <Button
-          size={'md'}
-          fullWidth
-          variant="filled"
-          loading={false}
-          onClick={() => router.push('/')}
-        >
+        <Button size={'md'} fullWidth variant="filled" loading={false} onClick={handlePayNow}>
           {t.invoice['pay-now']}
         </Button>
       </Group>
@@ -86,27 +60,37 @@ export const UpcomingSettlements = () => {
   );
 };
 
+interface UpcomingSettlementCourseCardProps extends AccordionLabelProps {
+  onCardCheck: () => void;
+}
+
 function UpcomingSettlementCourseCard({
   id,
   title,
   due_date,
   price,
-}: Readonly<AccordionLabelProps>) {
+  onCardCheck,
+}: UpcomingSettlementCourseCardProps) {
   const [checked, setChecked] = useState(false);
+
+  const handleCheckboxChange = () => {
+    setChecked(!checked);
+    onCardCheck();
+  };
+
   return (
     <Card
       radius="md"
       withBorder
       sx={{
-        border: checked ? '1px solid #EDD491' : '1px solid #EDEDED', // TODO: use theme colors
+        border: checked ? '1px solid #EDD491' : '1px solid #EDEDED',
         overflow: 'hidden',
         minHeight: '100px',
       }}
       color={checked ? 'gray' : 'blue'}
-      onClick={() => setChecked((c) => !c)}
+      onClick={() => handleCheckboxChange()}
     >
       <Stack spacing={3}>
-        {/*<Avatar src={image} size="lg" />*/}
         <Text size={'sm'}>{title}</Text>
         <Group
           sx={{
@@ -121,9 +105,9 @@ function UpcomingSettlementCourseCard({
           </Text>
           <Checkbox
             checked={checked}
-            onChange={(event) => setChecked(event.target.checked)}
+            onChange={handleCheckboxChange}
             wrapperProps={{
-              onClick: () => setChecked((c) => !c),
+              onClick: () => handleCheckboxChange(),
             }}
           />
         </Group>
