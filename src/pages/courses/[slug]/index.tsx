@@ -815,7 +815,7 @@ const CourseDetails: NextPage = () => {
                       )}
                     </ActionIcon>
 
-                    {Number(data?.course?.discount_price) === 0 ? (
+                    {Number(data?.course?.price) == 0 ? (
                       <Stack
                         id="btn-courseEnroll"
                         onClick={() => !enrolling && onCourseEnroll()}
@@ -878,7 +878,11 @@ const CourseDetails: NextPage = () => {
                             <Loader size="sm" color={'#000'} />
                           ) : (
                             <Text sx={{ fontSize: '20px', color: '#000000', fontWeight: 500 }}>
-                              {`${Number(data?.course?.discount_price || 0)} KWD`}
+                              {`${Number(
+                                data?.course?.discount_price == 0
+                                  ? data?.course?.price
+                                  : data?.course?.discount_price
+                              )} KWD`}
                               {data?.course?.haveOffer && (
                                 <span
                                   style={{

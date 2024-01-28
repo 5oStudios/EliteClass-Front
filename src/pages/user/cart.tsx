@@ -147,9 +147,11 @@ export const Cart = () => {
             el.haveOffer = true;
             if (el.discountType === 'fixed') {
               el.price = el.originalPrice - el.price;
-            } else {
+            } else if (el.discountType === 'percentage') {
               el.price = ((100 - el.price) / 100) * el.originalPrice;
             }
+          } else if (el.discountType === null && el.price === 0) {
+            el.price = el.originalPrice;
           }
         });
         setCart(res.data);

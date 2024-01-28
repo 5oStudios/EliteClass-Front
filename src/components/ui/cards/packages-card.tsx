@@ -192,20 +192,22 @@ const Layout1 = ({
             </Text>
             <Group position="apart" spacing={7} noWrap>
               <Text weight={500} size="xs" sx={(theme) => ({ color: theme?.other?.blueToPrimary })}>
-                {Number(discount_price || 0) == 0
+                {Number(price) == 0
                   ? `${t.free}`
-                  : `${Number(discount_price || 0)}KWD`}
+                  : `${Number(discount_price == 0 ? price : discount_price)}KWD`}
               </Text>
-              <Text
-                sx={(theme) => ({
-                  textDecoration: 'line-through',
-                  color: theme.other.placeholderColor,
-                  fontSize: 12,
-                })}
-              >
-                {Number(price || 0)}
-                KWD
-              </Text>
+              {haveOffer && (
+                <Text
+                  sx={(theme) => ({
+                    textDecoration: 'line-through',
+                    color: theme.other.placeholderColor,
+                    fontSize: 12,
+                  })}
+                >
+                  {Number(price || 0)}
+                  KWD
+                </Text>
+              )}
             </Group>
           </Stack>
         </Text>

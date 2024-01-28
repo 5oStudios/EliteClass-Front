@@ -648,7 +648,7 @@ const CartItem = ({
                     <Text sx={{ fontSize: 12 }}>{t.booking['full-payment']}</Text>
                     {paymentMethod == 'full' && (
                       <Text sx={{ fontSize: 14 }} weight={500} color={'#298EAE'}>
-                        {Number(item?.price || 0) > 0
+                        {Number(item?.originalPrice || 0) > 0
                           ? `${Number(item?.price || 0)} KWD`
                           : t.free.toUpperCase()}
                       </Text>
@@ -699,7 +699,7 @@ const CartItem = ({
                   <Text sx={{ fontSize: 12, color: '#000000' }}>{t.booking['full-payment']}</Text>
                   {paymentMethod == 'full' && (
                     <Text sx={{ fontSize: 14 }} weight={500} color={'#298EAE'}>
-                      {Number(item?.price || 0) > 0
+                      {Number(item?.originalPrice || 0) > 0
                         ? `${Number(item?.price || 0)} KWD`
                         : t.free.toUpperCase()}
                       {item?.haveOffer && (
