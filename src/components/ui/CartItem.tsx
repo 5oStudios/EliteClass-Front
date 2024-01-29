@@ -651,6 +651,17 @@ const CartItem = ({
                         {Number(item?.originalPrice || 0) > 0
                           ? `${Number(item?.price || 0)} KWD`
                           : t.free.toUpperCase()}
+                        {item?.haveOffer && (
+                          <span
+                            style={{
+                              color: 'red',
+                              textDecoration: 'line-through',
+                              marginLeft: '5px',
+                            }}
+                          >
+                            {`  ${item?.originalPrice} KWD`}
+                          </span>
+                        )}
                       </Text>
                     )}
                   </Group>
