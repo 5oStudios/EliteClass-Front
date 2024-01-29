@@ -5,43 +5,74 @@ import { useRouter } from 'next/router';
 import ar from '@/i18n/ar/common.json';
 import en from '@/i18n/en/common.json';
 import { DiscountBadge } from '@/components/badges/discount-badge';
-
+import axios from '@/components/axios/axios';
+import { LoadingScreen } from '../ui/loader-screen';
 interface AccordionLabelProps {
   id: string;
+  typeId: string;
+  type: string;
   title: string;
   due_date: string;
   price: number;
+}
+interface selectedAccordionLabelProps {
+  id: string;
+  typeId: string;
+  type: string;
+  title: string;
+  due_date: string;
+  price: number;
+  installments: string[];
 }
 
 export const UpcomingSettlements = (props: { upcomingInstallments: AccordionLabelProps[] }) => {
   const { upcomingInstallments } = props;
   const router = useRouter();
   const t = router.locale === 'ar-kw' ? ar : en;
+  const [isOpen, setisOpen] = useState(true);
 
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
-
-  const handleCardCheck = (id: string) => {
-    setSelectedIds((prevIds) =>
-      prevIds.includes(id) ? prevIds.filter((prevId) => prevId !== id) : [...prevIds, id]
-    );
+  // const [selectedItems, setSelectedItems] = useState<selectedAccordionLabelProps[]>([]);
+  const handleCardCheck = (object: AccordionLabelProps) => {
+    // setSelectedItems((prevItems) => {
+    //   // Check if there is an object with the same typeId
+    //   const existingItemIndex = prevItems.findIndex((item) => item.typeId === object.typeId);
+    //   // If an object with the same typeId is found
+    //   if (existingItemIndex !== -1) {
+    //     // Create a copy of the selectedItems array
+    //     const updatedItems = [...prevItems];
+    //     // Update the installments array within the found object
+    //     updatedItems[existingItemIndex] = {
+    //       ...updatedItems[existingItemIndex],
+    //       installments: [
+    //         ...(updatedItems[existingItemIndex].installments || []), // Keep existing installments
+    //         object.id, // Add the itemId to the installments array
+    //       ],
+    //     };
+    //     return updatedItems;
+    //   } else {
+    //     // If no object with the same typeId is found, add the whole object to selectedItems
+    //     return [...prevItems, { ...object, installments: [object.id] }];
+    //   }
+    // });
   };
-
   const handlePayNow = () => {
     // Use the selectedIds array to send data to the API
-    console.log('Selected IDs:', selectedIds);
+    // console.log('Selected items:', selectedItems);
     // Add your API call logic here
+    router.replace('/user/invoices');
+    setisOpen(false);
   };
 
-  const overdueCourses = upcomingInstallments.map((course) => (
+  const overdueCourses = upcomingInstallments.map((item) => (
     <UpcomingSettlementCourseCard
-      key={course.id}
-      {...course}
-      onCardCheck={() => handleCardCheck(course.id)}
+      key={item.id}
+      {...item}
+      onCardCheck={() => handleCardCheck(item)}
     />
   ));
 
   return (
-    <BaseDrawerWrapper title={t['upcoming-settlements']}>
+    <BaseDrawerWrapper title={t['upcoming-settlements']} closeEventHandler={isOpen}>
       <Stack
         sx={{
           overflowY: 'scroll',
@@ -74,6 +105,7 @@ function UpcomingSettlementCourseCard({
   const [checked, setChecked] = useState(false);
   const preferredColorScheme = useMantineColorScheme();
   const darkMode = preferredColorScheme.colorScheme === 'dark';
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCardBorder = () => {
     if (darkMode) {
@@ -85,8 +117,20 @@ function UpcomingSettlementCourseCard({
   };
 
   const handleCheckboxChange = () => {
-    setChecked(!checked);
-    onCardCheck();
+    setIsLoading(true);
+    const url = '/pending/instalments';
+    const object = checked ? { remove_payment_plan_id: id } : { payment_plan_id: id };
+    axios
+      .post(url, object)
+      .then((response) => {
+        console.log(response);
+        setIsLoading(false);
+        setChecked(!checked);
+      })
+      .catch((err) => {
+        setIsLoading(false);
+      });
+    // onCardCheck();
   };
 
   return (
@@ -99,8 +143,8 @@ function UpcomingSettlementCourseCard({
         minHeight: '100px',
       }}
       color={checked ? 'gray' : 'blue'}
-      onClick={() => handleCheckboxChange()}
     >
+      <LoadingScreen isLoading={isLoading} />
       <Stack spacing={5}>
         <Text size={'sm'}>{title}</Text>
         <Group
@@ -121,7 +165,6 @@ function UpcomingSettlementCourseCard({
               borderRadius: '5px',
             }}
             checked={checked}
-            onChange={handleCheckboxChange}
             wrapperProps={{
               onClick: () => handleCheckboxChange(),
             }}

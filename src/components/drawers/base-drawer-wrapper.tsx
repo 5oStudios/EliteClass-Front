@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   ActionIcon,
   Drawer,
@@ -14,14 +14,23 @@ import en from '@/i18n/en/common.json';
 export const BaseDrawerWrapper = ({
   children,
   title,
+  closeEventHandler,
 }: {
   children: React.ReactNode;
   title: string;
+  closeEventHandler: boolean;
 }) => {
   const [isOpen, setIsOpen] = React.useState(true);
   const { colorScheme } = useMantineColorScheme();
   const router = useRouter();
   const t = router.locale === 'ar-kw' ? ar : en;
+  useEffect(() => {
+    // Perform action when closeEventHandler changes to false
+    if (!closeEventHandler) {
+      // Add your action here
+      setIsOpen(false);
+    }
+  }, [closeEventHandler]);
   return (
     <Drawer
       opened={isOpen}
