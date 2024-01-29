@@ -91,7 +91,18 @@ const LiveSessionOverview = () => {
       axios
         .get(`meeting/detail/${slug}?secret=11f24438-b63a-4de2-ae92-e1a1048706f5&&type=${type}`)
         .then((response) => {
-          //console.log('sessions-details', response);
+          console.log('sessions-details', response);
+          if (response.data.discount_type !== null && response.data.discount_price !== 0) {
+            if (response.data.discount_type == 'fixed') {
+              response.data.discount_price = response.data.price - response.data.discount_price;
+            } else if (response.data.discount_type == 'percentage') {
+              response.data.discount_price =
+                response.data.price * ((100 - response.data.discount_price) / 100);
+            }
+          } else {
+            response.data.discount_price = response.data.price;
+          }
+
           setSessionDetail(response?.data);
           setIsCart(response?.data?.is_cart);
           setIsLoading(false);
@@ -674,7 +685,7 @@ const LiveSessionOverview = () => {
                       </ActionIcon>
                       {sessiondetail?.is_purchased ? (
                         renderEnrollButton(false)
-                      ) : parseInt(sessiondetail?.discount_price) === 0 ? (
+                      ) : sessiondetail?.discount_price ? (
                         renderEnrollButton(true)
                       ) : (
                         <Stack
@@ -713,7 +724,7 @@ const LiveSessionOverview = () => {
                               <Loader size="sm" color={'#000'} />
                             ) : (
                               <Text sx={{ fontSize: '20px', color: '#000000', fontWeight: 500 }}>
-                                {`${parseInt(sessiondetail?.discount_price || 0)} KW`}
+                                {`${parseInt(sessiondetail?.discount_price)} KW`}
                               </Text>
                             )}
                           </Stack>
