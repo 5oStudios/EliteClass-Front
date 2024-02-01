@@ -82,7 +82,7 @@ const CourseDetails: NextPage = () => {
   const [enrolling, setEnrolling] = useState(false);
 
   useEffect(() => {
-    setActiveTab(parseInt(localStorage.getItem('courses_active_tab') || '0'));
+    setActiveTab(Number(localStorage.getItem('courses_active_tab') || '0'));
   }, []);
 
   useEffect(() => {
@@ -100,6 +100,22 @@ const CourseDetails: NextPage = () => {
         is_bundle: isBundled,
         secret: '11f24438-b63a-4de2-ae92-e1a1048706f5',
       });
+      console.log(response);
+
+      if (
+        response.data.course.discount_type !== null &&
+        response.data.course.discount_price !== 0
+      ) {
+        response.data.course.haveOffer = true;
+        if (response.data.course.discountType === 'fixed') {
+          response.data.course.discount_price =
+            response.data.course.price - response.data.course.discount_price;
+        } else {
+          response.data.course.discount_price =
+            ((100 - response.data.course.discount_price) / 100) * response.data.course.price;
+        }
+      }
+
       return response?.data;
     } catch (error: any) {
       return error?.response;
@@ -799,7 +815,7 @@ const CourseDetails: NextPage = () => {
                       )}
                     </ActionIcon>
 
-                    {parseInt(data?.course?.discount_price) === 0 ? (
+                    {Number(data?.course?.price) == 0 ? (
                       <Stack
                         id="btn-courseEnroll"
                         onClick={() => !enrolling && onCourseEnroll()}
@@ -851,7 +867,7 @@ const CourseDetails: NextPage = () => {
                           sx={{
                             background: '#FFDD83', //is_cart ? '#FFDD83' : '#FFFFFF',
                             height: 44,
-                            width: '40%',
+                            width: '55%',
                             borderRadius: 20,
                             justifyContent: 'center',
                             alignItems: 'center',
@@ -862,7 +878,23 @@ const CourseDetails: NextPage = () => {
                             <Loader size="sm" color={'#000'} />
                           ) : (
                             <Text sx={{ fontSize: '20px', color: '#000000', fontWeight: 500 }}>
-                              {`${parseInt(data?.course?.discount_price || 0)} KW`}
+                              {`${Number(
+                                data?.course?.discount_price == 0
+                                  ? data?.course?.price
+                                  : data?.course?.discount_price
+                              )} KWD`}
+                              {data?.course?.haveOffer && (
+                                <span
+                                  style={{
+                                    color: 'red',
+                                    textDecoration: 'line-through',
+                                    marginLeft: '5px',
+                                    fontSize: '15px',
+                                  }}
+                                >
+                                  {`  ${data?.course?.price}`}
+                                </span>
+                              )}
                             </Text>
                           )}
                         </Stack>

@@ -123,9 +123,13 @@ export const QuizReport = () => {
               {data?.grade >= 0 && !data?.fullyMarked && <Text>{t.final}</Text>}
             </>
           }
-          {
+          {data?.remark !== null && (
             <>
-              <Text>{t['instructor-remark']}</Text>
+              {isLoading ? (
+                <Skeleton height={25} width={150} />
+              ) : (
+                <Text>{t['instructor-remark']}</Text>
+              )}
               <Text
                 sx={{
                   fontSize: 18,
@@ -142,7 +146,7 @@ export const QuizReport = () => {
                 )}
               </Text>
             </>
-          }
+          )}
           {/* <Space h="xl" /> */}
           {isLoading ? (
             <Skeleton height={40} width="80%" m="auto" />

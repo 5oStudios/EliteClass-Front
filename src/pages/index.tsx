@@ -10,6 +10,8 @@ import { getHomeContent } from '@/utils/axios/getHomeContent';
 import { SearchResults } from '@/components/ui/search-results';
 import { useRouter } from 'next/router';
 
+import { UpdateAppModal } from '@/components/modals/update-app';
+
 export const HomePage = ({
   initialData,
   isSearchPage,
@@ -29,7 +31,6 @@ export const HomePage = ({
       setShowSearchResults(false);
     }
   }, [params]);
-
 
   return (
     <>
@@ -61,6 +62,7 @@ export const HomePage = ({
             </Box>
           </SimpleGrid>
         </Container>
+        <UpdateAppModal />
       </main>
     </>
   );
@@ -122,20 +124,20 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
       duration: [0, 500],
       search: search as string,
       auth: access_token,
-      //@ts-ignore
       ...(access_token === undefined && {
+        //@ts-ignore
         category_id: JSON.parse(initial_country).id,
       }),
-      //@ts-ignore
       ...(access_token === undefined && {
+        //@ts-ignore
         scnd_category_id: JSON.parse(initial_type).id,
       }),
-      //@ts-ignore
       ...(access_token === undefined && {
+        //@ts-ignore
         sub_category: JSON.parse(initial_stage).id,
       }),
-      //@ts-ignore
       ...(access_token === undefined && {
+        //@ts-ignore
         ch_sub_category: JSON.parse(initial_major).id,
       }),
     });

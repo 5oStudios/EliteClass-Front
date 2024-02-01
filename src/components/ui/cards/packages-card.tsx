@@ -24,20 +24,23 @@ import { showNotification } from '@mantine/notifications';
 import { getCookie } from 'cookies-next';
 import { useQueryClient } from 'react-query';
 import useNextBlurhash from 'use-next-blurhash';
+import { DiscountBadge } from '@/components/badges/discount-badge';
+
 import { shimmer, toBase64 } from '@/utils/utils';
 import en from '@/src/constants/locales/en-us/common.json';
 import ar from '@/src/constants/locales/ar-kw/common.json';
 // @ts-ignore
 import EllipsisText from 'react-ellipsis-text';
-import { route } from 'next/dist/server/router';
 
 type Props = {
   title: any;
   image: string;
   total_courses: number;
+  discountAmount: number;
   price: any;
   discount_price: any;
   layoutGrid?: boolean;
+  haveOffer?: boolean;
   in_wishlist?: boolean;
   href: string;
   id: string;
@@ -56,6 +59,8 @@ const Layout1 = ({
   title,
   price,
   total_courses,
+  discountAmount,
+  haveOffer,
   discount_price,
   blurDataUrl,
   href,
@@ -136,9 +141,10 @@ const Layout1 = ({
               <AspectRatio
                 ratio={16 / 9}
                 mx="auto"
-                sx={{ width: '100%', overflow: 'hidden', borderRadius: 9 }}
+                sx={{ width: '100%', overflow: 'hidden', borderRadius: 9, position: 'relative' }}
               >
                 <NextImage
+                  alt="image"
                   src={img}
                   objectFit="cover"
                   layout="fill"
@@ -148,15 +154,17 @@ const Layout1 = ({
                     setImg('/assets/images/default.png');
                   }}
                 />
+                {haveOffer && <DiscountBadge value={`${discountAmount}`} dir={'left'} />}
               </AspectRatio>
             </MediaQuery>
             <MediaQuery largerThan="xs" styles={{ display: 'none' }}>
               <AspectRatio
                 ratio={ratio || 16 / 9}
                 mx="auto"
-                sx={{ width: '100%', overflow: 'hidden', borderRadius: 9 }}
+                sx={{ width: '100%', overflow: 'hidden', borderRadius: 9, position: 'relative' }}
               >
                 <NextImage
+                  alt="image"
                   src={img}
                   objectFit="cover"
                   layout="fill"
@@ -166,6 +174,7 @@ const Layout1 = ({
                     setImg('/assets/images/default.png');
                   }}
                 />
+                {haveOffer && <DiscountBadge value={`${discountAmount}`} dir={'left'} />}
               </AspectRatio>
             </MediaQuery>
             <Text
@@ -183,20 +192,22 @@ const Layout1 = ({
             </Text>
             <Group position="apart" spacing={7} noWrap>
               <Text weight={500} size="xs" sx={(theme) => ({ color: theme?.other?.blueToPrimary })}>
-                {parseInt(discount_price || 0) == 0
+                {Number(price) == 0
                   ? `${t.free}`
-                  : `${parseInt(discount_price || 0)}KWD`}
+                  : `${Number(discount_price == 0 ? price : discount_price)}KWD`}
               </Text>
-              <Text
-                sx={(theme) => ({
-                  textDecoration: 'line-through',
-                  color: theme.other.placeholderColor,
-                  fontSize: 12,
-                })}
-              >
-                {parseInt(price || 0)}
-                KWD
-              </Text>
+              {haveOffer && (
+                <Text
+                  sx={(theme) => ({
+                    textDecoration: 'line-through',
+                    color: theme.other.placeholderColor,
+                    fontSize: 12,
+                  })}
+                >
+                  {Number(price || 0)}
+                  KWD
+                </Text>
+              )}
             </Group>
           </Stack>
         </Text>
@@ -245,6 +256,7 @@ const Layout2 = ({
           >
             <Box>
               <NextImage
+                alt="image"
                 src={img}
                 layout="fill"
                 objectFit="cover"
@@ -308,9 +320,9 @@ const Layout2 = ({
               </Text>
               <Group position="apart" noWrap>
                 <Text weight={500} sx={(theme) => ({ color: theme?.other?.blueToPrimary })}>
-                  {parseInt(discount_price || 0) == 0
+                  {Number(discount_price || 0) == 0
                     ? `${t.free}`
-                    : `${parseInt(discount_price || 0)}KWD`}
+                    : `${Number(discount_price || 0)}KWD`}
                 </Text>
                 <Text
                   sx={(theme) => ({
@@ -319,7 +331,7 @@ const Layout2 = ({
                     fontSize: 12,
                   })}
                 >
-                  {parseInt(price || 0)}
+                  {Number(price || 0)}
                   KWD
                 </Text>
               </Group>

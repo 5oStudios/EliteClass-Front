@@ -52,7 +52,6 @@ export const HomeContent = (props: any) => {
     const base64 = base64Url.replace('-', '+').replace('_', '/');
     return JSON.parse(window.atob(base64));
   };
-  console.log(props?.homeData?.slider);
 
   //console.log("MEETING:", props?.homeData?.meetings?.data)
   // language

@@ -419,5 +419,12 @@
     "by-wallet": "By Wallet",
     "apply-coupon": "Apply Coupon Code",
     "coupon-discount-amount": "Coupon  discount amount"
+  },
+  "upcoming-settlements": "Upcoming Settlements",
+  "update-app-modal": {
+    "title": "Update Available",
+    "description": "A new version of the app is available, please update it to continue using the app.",
+    "update": "Update",
+    "cancel": "Cancel"
   }
 }

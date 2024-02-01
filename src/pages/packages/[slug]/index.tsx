@@ -72,6 +72,20 @@ const PackagesDetails = () => {
     };
     axios(config)
       .then((response) => {
+        console.log(response.data);
+        if (response.data.discount_type !== null && response.data.discount_price !== 0) {
+          response.data.haveOffer = true;
+          if (response.data.discountType === 'fixed') {
+            response.data.discount_price = response.data.price - response.data.discount_price;
+          } else {
+            response.data.discount_price =
+              ((100 - response.data.discount_price) / 100) * response.data.price;
+          }
+        } else if (response.data.discount_type === null && response.data.discount_price == 0) {
+          response.data.discount_price = response.data.price;
+        }
+        console.log(response.data.discount_price);
+
         setIsLoading(false);
         setCoursesData(response?.data?.courses?.data);
         setPackagesData(response?.data);
@@ -426,13 +440,15 @@ const PackagesDetails = () => {
                     weight={500}
                     sx={{ color: colorScheme == 'dark' ? '#ffffff' : '#298EAE' }}
                   >
-                    {parseInt(packagesData?.discount_price || 0) == 0
+                    {Number(packagesData?.price || 0) == 0
                       ? `${t.free}`
-                      : `${parseInt(packagesData?.discount_price || 0)}KWD`}
+                      : `${Number(packagesData?.discount_price)} KWD`}
                   </Text>
-                  <Text size="xs" sx={{ textDecoration: 'line-through', color: '#ACB7CA' }}>
-                    {parseInt(packagesData?.price || 0)}KWD
-                  </Text>
+                  {packagesData?.haveOffer && (
+                    <Text size="xs" sx={{ textDecoration: 'line-through', color: '#ACB7CA' }}>
+                      {Number(packagesData?.price || 0)}KWD
+                    </Text>
+                  )}
                 </Group>
                 <Stack spacing={8}>
                   <Group noWrap align="center">
@@ -610,7 +626,7 @@ const PackagesDetails = () => {
                           <StarNonFav />
                         )}
                       </ActionIcon>
-                      {parseInt(packagesData?.discount_price) === 0 ? (
+                      {Number(packagesData?.price) == 0 ? (
                         <Stack
                           id="btn-packageEnroll"
                           onClick={() => !enrolling && onPackageEnroll()}
@@ -656,7 +672,7 @@ const PackagesDetails = () => {
                             sx={{
                               background: '#FFDD83', //is_cart ? '#FFDD83' : '#FFFFFF',
                               height: 44,
-                              width: '40%',
+                              width: '55%',
                               borderRadius: 20,
                               justifyContent: 'center',
                               alignItems: 'center',
@@ -667,7 +683,23 @@ const PackagesDetails = () => {
                               <Loader size="sm" color={'#000'} />
                             ) : (
                               <Text sx={{ fontSize: '20px', color: '#000000', fontWeight: 500 }}>
-                                {`${parseInt(packagesData?.discount_price || 0)} KW`}
+                                {`${Number(
+                                  packagesData?.discount_price == 0
+                                    ? packagesData?.price
+                                    : packagesData?.discount_price
+                                )} KWD`}
+                                {packagesData?.haveOffer && (
+                                  <span
+                                    style={{
+                                      color: 'red',
+                                      textDecoration: 'line-through',
+                                      marginLeft: '5px',
+                                      fontSize: '15px',
+                                    }}
+                                  >
+                                    {`  ${packagesData?.price}`}
+                                  </span>
+                                )}
                               </Text>
                             )}
                           </Stack>

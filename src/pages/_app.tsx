@@ -15,14 +15,21 @@ import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import rtlPlugin from 'stylis-plugin-rtl';
 import axios from '@/components/axios/axios';
+
 // import OpenReplay from '@openreplay/tracker';
 
 import '../styles/accessdenied.css';
 import AppContext from '../../context/context';
-// const openReply = new OpenReplay({
-//   projectKey: 'wRP1Ie53OC4uxGodgqNb',
-//   ingestPoint: 'https://or.exodevs.com/ingest',
-// });
+import { UpcomingSettlements } from '@/components/drawers/upcoming-settlements';
+
+interface AccordionLabelProps {
+  id: string;
+  typeId: string;
+  type: string;
+  title: string;
+  due_date: string;
+  price: number;
+}
 
 export const App = (props: AppProps & { colorScheme: ColorScheme; locale: string }) => {
   const { Component, pageProps, locale } = props;
@@ -31,6 +38,9 @@ export const App = (props: AppProps & { colorScheme: ColorScheme; locale: string
   const token: any = getCookie('access_token');
   // const [tracker, setTracker] = useState(false);
   const [trackerCheck, setTrackerCheck] = useState(false);
+
+  const [upcoming, setupcoming] = useState<AccordionLabelProps[]>([]);
+  const [upcomingDrawer, setupcomingDrawer] = useState(false);
 
   function setUserTracker(value: any) {
     setTrackerCheck(value);
@@ -69,6 +79,31 @@ export const App = (props: AppProps & { colorScheme: ColorScheme; locale: string
   //   }
   // }, [trackerCheck]);
 
+  const upcomingInstallments = (userId: string | null) => {
+    console.log('im here');
+
+    axios.get(`/overdue/${userId}`).then((response: any) => {
+      console.log(response);
+
+      setupcoming(
+        response.data.map((data: any) => {
+          return {
+            id: data.installmentId,
+            typeId: data.typeId,
+            type: data.type,
+            image: data.image,
+            title: data.name,
+            due_date: data.dueDate,
+            price: data.amount,
+          };
+        })
+      );
+      if (response.data.length > 0) {
+        setupcomingDrawer(true);
+      }
+    });
+  };
+
   const toggleColorScheme = (value?: ColorScheme) => {
     const nextColorScheme = value || (colorScheme === 'dark' ? 'light' : 'dark');
     setColorScheme(nextColorScheme);
@@ -91,6 +126,10 @@ export const App = (props: AppProps & { colorScheme: ColorScheme; locale: string
   let layoutDirection = getLayoutDirection(router.locale);
 
   useEffect(() => {
+    const userId = localStorage.getItem('user_id');
+    if (userId) {
+      upcomingInstallments(userId);
+    }
     document.documentElement.dir = layoutDirection;
   }, [layoutDirection]);
   const [history, setHistory] = useState([]);
@@ -261,16 +300,17 @@ export const App = (props: AppProps & { colorScheme: ColorScheme; locale: string
                   //@ts-ignore
                   getLayout(
                     <AppContext.Provider
-                      // value={{
-                      //   tracker,
-                      //   setTracker: setUserTracker,
-                      // }}
+                    // value={{
+                    //   tracker,
+                    //   setTracker: setUserTracker,
+                    // }}
                     >
                       <Component {...pageProps} />
                     </AppContext.Provider>
                   )
                 }
               </NotificationsProvider>
+              {upcomingDrawer && <UpcomingSettlements upcomingInstallments={upcoming} />}{' '}
             </MantineProvider>
           </ColorSchemeProvider>
           <ReactQueryDevtools />
