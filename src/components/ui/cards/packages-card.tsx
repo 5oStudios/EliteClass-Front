@@ -36,7 +36,7 @@ type Props = {
   title: any;
   image: string;
   total_courses: number;
-  discountAmount: number;
+  discountAmount?: number;
   price: any;
   discount_price: any;
   layoutGrid?: boolean;
