@@ -60,7 +60,7 @@ export const getHomeContent = async ({
     if (el.discount_type !== null && el.discount_price !== 0) {
       el.haveOffer = true;
       if (el.discount_type === 'fixed') {
-        el.discountAmount = `${Number(el.discount_price).toFixed(2)} KWD`;
+        el.discountAmount = `${Number(el.discount_price).toFixed(2)} `;
         console.log(el.discountAmount);
 
         el.discount_price = el.price - el.discount_price;
@@ -76,7 +76,7 @@ export const getHomeContent = async ({
     if (el.discount_type !== null && el.discount_price !== 0) {
       el.haveOffer = true;
       if (el.discount_type === 'fixed') {
-        el.discountAmount = `${el.price} KWD`;
+        el.discountAmount = `${el.price} `;
         el.discount_price = el.price - el.discount_price;
       } else {
         el.discountAmount = `${el.price} %`;

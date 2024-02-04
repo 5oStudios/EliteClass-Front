@@ -442,11 +442,12 @@ const PackagesDetails = () => {
                   >
                     {Number(packagesData?.price || 0) == 0
                       ? `${t.free}`
-                      : `${Number(packagesData?.discount_price)} KWD`}
+                      : `${Number(packagesData?.discount_price)} ${t.KWD}`}
                   </Text>
                   {packagesData?.haveOffer && (
                     <Text size="xs" sx={{ textDecoration: 'line-through', color: '#ACB7CA' }}>
-                      {Number(packagesData?.price || 0)}KWD
+                      {Number(packagesData?.price || 0)}
+                      {t.KWD}
                     </Text>
                   )}
                 </Group>
@@ -687,7 +688,7 @@ const PackagesDetails = () => {
                                   packagesData?.discount_price == 0
                                     ? packagesData?.price
                                     : packagesData?.discount_price
-                                )} KWD`}
+                                )} ${t.KWD}`}
                                 {packagesData?.haveOffer && (
                                   <span
                                     style={{

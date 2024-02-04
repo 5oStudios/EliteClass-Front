@@ -76,7 +76,6 @@ const Layout1 = ({
   const t = router.locale === 'en-us' ? en : ar;
   const [img, setImg] = useState(image);
   const { colorScheme } = useMantineColorScheme();
-  console.log('lay1', discount_price, discountAmount);
 
   //language
   return (
@@ -142,7 +141,7 @@ const Layout1 = ({
               <AspectRatio
                 ratio={16 / 9}
                 mx="auto"
-                sx={{ width: '100%', overflow: 'hidden', borderRadius: 9, position: 'relative' }}
+                sx={{ width: '100%', overflow: 'hidden', borderRadius: 9 }}
               >
                 <NextImage
                   alt="image"
@@ -155,7 +154,9 @@ const Layout1 = ({
                     setImg('/assets/images/default.png');
                   }}
                 />
-                {haveOffer && <DiscountBadge value={`${discountAmount}`} dir={'left'} />}
+                <Box>
+                  {haveOffer && <DiscountBadge value={`${discountAmount}${t.KWD}`} dir={'left'} />}
+                </Box>
               </AspectRatio>
             </MediaQuery>
             <MediaQuery largerThan="xs" styles={{ display: 'none' }}>
@@ -175,7 +176,9 @@ const Layout1 = ({
                     setImg('/assets/images/default.png');
                   }}
                 />
-                {haveOffer && <DiscountBadge value={`${discountAmount}`} dir={'left'} />}
+                <Box>
+                  {haveOffer && <DiscountBadge value={`${discountAmount}${t.KWD}`} dir={'left'} />}
+                </Box>{' '}
               </AspectRatio>
             </MediaQuery>
             <Text
@@ -195,7 +198,7 @@ const Layout1 = ({
               <Text weight={500} size="xs" sx={(theme) => ({ color: theme?.other?.blueToPrimary })}>
                 {Number(price) == 0
                   ? `${t.free}`
-                  : `${Number(discount_price == 0 ? price : discount_price)}KWD`}
+                  : `${Number(discount_price == 0 ? price : discount_price)}${t.KWD}`}
               </Text>
               {haveOffer && (
                 <Text
@@ -206,7 +209,7 @@ const Layout1 = ({
                   })}
                 >
                   {Number(price || 0)}
-                  KWD
+                  {t.KWD}
                 </Text>
               )}
             </Group>
@@ -324,7 +327,7 @@ const Layout2 = ({
                 <Text weight={500} sx={(theme) => ({ color: theme?.other?.blueToPrimary })}>
                   {Number(discount_price || 0) == 0
                     ? `${t.free}`
-                    : `${Number(discount_price || 0)}KWD`}
+                    : `${Number(discount_price || 0)}${t.KWD}`}
                 </Text>
                 <Text
                   sx={(theme) => ({
@@ -334,7 +337,7 @@ const Layout2 = ({
                   })}
                 >
                   {Number(price || 0)}
-                  KWD
+                  {t.KWD}
                 </Text>
               </Group>
             </Stack>

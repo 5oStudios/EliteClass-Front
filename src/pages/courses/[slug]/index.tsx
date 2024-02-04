@@ -887,7 +887,7 @@ const CourseDetails: NextPage = () => {
                                 data?.course?.discount_price == 0
                                   ? data?.course?.price
                                   : data?.course?.discount_price
-                              )}  KWD`}
+                              )}  ${t.KWD}`}
 
                               {data?.course?.haveOffer && (
                                 <span
