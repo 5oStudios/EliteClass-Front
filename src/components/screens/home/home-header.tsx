@@ -161,7 +161,7 @@ export const HomeHeader = ({
         data.packages.data.forEach((el: any) => {
           if (el.discount_type !== null && el.discount_price !== 0) {
             el.haveOffer = true;
-            if (el.discountType === 'fixed') {
+            if (el.discount_type === 'fixed') {
               el.discountAmount = `${Number(el.discount_price).toFixed(2)} KWD`;
               console.log(el.discountAmount);
 
@@ -177,7 +177,7 @@ export const HomeHeader = ({
         data.courses.data.forEach((el: any) => {
           if (el.discount_type !== null && el.discount_price !== 0) {
             el.haveOffer = true;
-            if (el.discountType === 'fixed') {
+            if (el.discount_type === 'fixed') {
               el.discountAmount = `${el.price} KWD`;
               el.discount_price = el.price - el.discount_price;
             } else {

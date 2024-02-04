@@ -76,6 +76,7 @@ const Layout1 = ({
   const t = router.locale === 'en-us' ? en : ar;
   const [img, setImg] = useState(image);
   const { colorScheme } = useMantineColorScheme();
+  console.log('lay1', discount_price, discountAmount);
 
   //language
   return (
@@ -234,6 +235,7 @@ const Layout2 = ({
   const t = router.locale === 'en-us' ? en : ar;
   const [img, setImg] = useState(image);
   const { colorScheme } = useMantineColorScheme();
+  console.log('lay2', discount_price);
 
   //language
   return (

@@ -11,7 +11,7 @@ type Props = {
   sub_category?: string;
   ch_sub_category?: string;
   auth?: string;
-  appSelectedLanguage:string;
+  appSelectedLanguage: string;
 };
 
 export const getHomeContent = async ({
@@ -24,7 +24,7 @@ export const getHomeContent = async ({
   sub_category,
   ch_sub_category,
   auth,
-  appSelectedLanguage='en'
+  appSelectedLanguage = 'en',
 }: Props) => {
   const obj = {
     secret: '11f24438-b63a-4de2-ae92-e1a1048706f5',
@@ -50,10 +50,40 @@ export const getHomeContent = async ({
     },
     {
       headers: {
-        'Authorization': `Bearer ${auth}`,
+        Authorization: `Bearer ${auth}`,
         'Accept-Language': appSelectedLanguage,
       },
     }
   );
+  //hereeee
+  response.data.packages.data.forEach((el: any) => {
+    if (el.discount_type !== null && el.discount_price !== 0) {
+      el.haveOffer = true;
+      if (el.discount_type === 'fixed') {
+        el.discountAmount = `${Number(el.discount_price).toFixed(2)} KWD`;
+        console.log(el.discountAmount);
+
+        el.discount_price = el.price - el.discount_price;
+      } else {
+        el.discountAmount = `${Number(el.discount_price).toFixed(2)} %`;
+        console.log(el.discountAmount, el.price);
+
+        el.discount_price = ((100 - el.discount_price) / 100) * el.price;
+      }
+    }
+  });
+  response.data.courses.data.forEach((el: any) => {
+    if (el.discount_type !== null && el.discount_price !== 0) {
+      el.haveOffer = true;
+      if (el.discount_type === 'fixed') {
+        el.discountAmount = `${el.price} KWD`;
+        el.discount_price = el.price - el.discount_price;
+      } else {
+        el.discountAmount = `${el.price} %`;
+        el.discount_price = ((100 - el.discount_price) / 100) * el.price;
+      }
+    }
+  });
+
   return response.data;
 };
