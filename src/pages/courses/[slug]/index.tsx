@@ -107,10 +107,15 @@ const CourseDetails: NextPage = () => {
         response.data.course.discount_price !== 0
       ) {
         response.data.course.haveOffer = true;
-        if (response.data.course.discountType === 'fixed') {
+        console.log(response.data.course.discount_price, 'haveoffer');
+
+        if (response.data.course.discount_type === 'fixed') {
           response.data.course.discount_price =
             response.data.course.price - response.data.course.discount_price;
+          console.log(response.data.course.discount_price, 'fixed');
         } else {
+          console.log(response.data.course.discount_type, 'percent');
+
           response.data.course.discount_price =
             ((100 - response.data.course.discount_price) / 100) * response.data.course.price;
         }
@@ -882,7 +887,8 @@ const CourseDetails: NextPage = () => {
                                 data?.course?.discount_price == 0
                                   ? data?.course?.price
                                   : data?.course?.discount_price
-                              )} KWD`}
+                              )}  ${t.KWD}`}
+
                               {data?.course?.haveOffer && (
                                 <span
                                   style={{
