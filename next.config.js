@@ -6,6 +6,7 @@ const { withSentryConfig } = require('@sentry/nextjs');
 
 const moduleExports = {
   distDir: process.env.NEXT_BUILD_DIR || '.next',
+  output: 'standalone',
   i18n: {
     locales: ['en-us', 'ar-kw'],
     defaultLocale: 'en-us',

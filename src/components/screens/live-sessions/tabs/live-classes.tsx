@@ -16,7 +16,6 @@ import NextImage from 'next/image';
 import momentWithTimeZone from 'moment-timezone';
 import en from '@/src/constants/locales/en-us/common.json';
 import ar from '@/src/constants/locales/ar-kw/common.json';
-import { route } from 'next/dist/server/router';
 import { NoRecordFound } from '@/components/ui/no-record-found';
 
 type props = {

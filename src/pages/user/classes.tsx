@@ -33,7 +33,6 @@ import { useRouter } from 'next/router';
 import { getCookie } from 'cookies-next';
 import ar from '@/src/constants/locales/ar-kw/common.json';
 import en from '@/src/constants/locales/en-us/common.json';
-import { route } from 'next/dist/server/router';
 // function _interopRequireDefault(obj: any) {
 //   return obj && obj.__esModule ? obj : { default: obj };
 // }
