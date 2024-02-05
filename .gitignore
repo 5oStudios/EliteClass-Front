@@ -74,6 +74,8 @@ tmp/
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
 
+.idea
+
 # Gradle
 .idea/**/gradle.xml
 .idea/**/libraries
