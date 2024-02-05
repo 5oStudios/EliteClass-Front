@@ -5,7 +5,7 @@ import { queryClient } from '@/utils/queryClient';
 import { FpjsProvider } from '@fingerprintjs/fingerprintjs-pro-react';
 import { ColorScheme, ColorSchemeProvider, MantineProvider } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
-import { deleteCookie, getCookie, setCookie } from 'cookies-next';
+import { getCookie, setCookie } from 'cookies-next';
 import { GetServerSidePropsContext } from 'next';
 import { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
@@ -15,9 +15,7 @@ import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import rtlPlugin from 'stylis-plugin-rtl';
 import axios from '@/components/axios/axios';
-
 // import OpenReplay from '@openreplay/tracker';
-
 import '../styles/accessdenied.css';
 import AppContext from '../../context/context';
 import { UpcomingSettlements } from '@/components/drawers/upcoming-settlements';
@@ -310,7 +308,8 @@ export const App = (props: AppProps & { colorScheme: ColorScheme; locale: string
                   )
                 }
               </NotificationsProvider>
-              {upcomingDrawer && <UpcomingSettlements upcomingInstallments={upcoming} />}{' '}
+              {upcomingDrawer && <UpcomingSettlements upcomingInstallments={upcoming} />}
+              {/*<CoursesFeedback />*/}
             </MantineProvider>
           </ColorSchemeProvider>
           <ReactQueryDevtools />
