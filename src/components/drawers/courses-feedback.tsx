@@ -5,6 +5,7 @@ import ar from '@/i18n/ar/common.json';
 import en from '@/i18n/en/common.json';
 import { useForm } from '@mantine/form';
 import { useRouter } from 'next/router';
+// @ts-ignore
 import ReactStars from 'react-rating-stars-component';
 
 interface IQuestionnaire {
