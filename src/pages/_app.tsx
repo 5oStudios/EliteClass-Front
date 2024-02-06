@@ -19,6 +19,7 @@ import axios from '@/components/axios/axios';
 import '../styles/accessdenied.css';
 import AppContext from '../../context/context';
 import { UpcomingSettlements } from '@/components/drawers/upcoming-settlements';
+import CoursesFeedback from '@/components/drawers/courses-feedback';
 
 interface AccordionLabelProps {
   id: string;
@@ -309,7 +310,7 @@ export const App = (props: AppProps & { colorScheme: ColorScheme; locale: string
                 }
               </NotificationsProvider>
               {upcomingDrawer && <UpcomingSettlements upcomingInstallments={upcoming} />}
-              {/*<CoursesFeedback />*/}
+              <CoursesFeedback />
             </MantineProvider>
           </ColorSchemeProvider>
           <ReactQueryDevtools />
