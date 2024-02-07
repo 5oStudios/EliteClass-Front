@@ -7,10 +7,27 @@ import { useForm } from '@mantine/form';
 import { useRouter } from 'next/router';
 // @ts-ignore
 import ReactStars from 'react-rating-stars-component';
+import { useQuery } from 'react-query';
+import axios from '@/components/axios/axios';
+
+const _mockGetQuestionnaires = async () => {
+  return await new Promise<IQuestionnaireBackendResponse>((resolve) => {
+    setTimeout(() => {
+      resolve(mockQuestionnaires);
+    }, 3000);
+  });
+};
+interface IQuestionnaireBackendResponse {
+  message: string;
+  questionnaires: IQuestionnaire[];
+}
 
 interface IQuestionnaire {
   id: number;
-  courseTitle: string;
+  course_title: string;
+  course_id: number;
+  questionnaire_title: string;
+  questionnaire_appointment: string;
   questions: IQuestion[];
 }
 
@@ -19,43 +36,51 @@ interface IQuestion {
   title: string;
 }
 
-const mockQuestionnaires: IQuestionnaire[] = [
-  {
-    id: 1,
-    courseTitle: 'Course 1',
-    questions: [
-      {
-        id: 1,
-        title: 'Question 1',
-      },
-      {
-        id: 2,
-        title: 'Question 2',
-      },
-    ],
-  },
-  {
-    id: 2,
-    courseTitle: 'Course 2',
-    questions: [
-      {
-        id: 3,
-        title: 'Question 3',
-      },
-      {
-        id: 4,
-        title: 'Question 4',
-      },
-    ],
-  },
-];
+const mockQuestionnaires: IQuestionnaireBackendResponse = {
+  message: 'Required questionnaires',
+  questionnaires: [
+    {
+      id: 2,
+      course_id: 1119,
+      course_title: 'this is course title',
+      questionnaire_title: 'this is questionnaire title2',
+      questionnaire_appointment: '2024-02-07',
+      questions: [
+        {
+          id: 4,
+          title: 'q1 title 2',
+        },
+        {
+          id: 5,
+          title: 'q2 title 2',
+        },
+        {
+          id: 6,
+          title: 'q3 title 2',
+        },
+      ],
+    },
+  ],
+};
 
 const CoursesFeedback = () => {
   const [isOpen, setIsOpen] = useState(true);
   const router = useRouter();
   const t = router.locale === 'ar-kw' ? ar : en;
-  const [questionnaires, setQuestionnaires] = useState<IQuestionnaire[] | null>(mockQuestionnaires);
+
   const [currentQuestionnaireCounter, setCurrentQuestionnaireCounter] = useState<number>(0);
+  const getQuestionnaires = async () => {
+    const response = await axios.get('/questionnaires/user/all');
+    return response.data;
+  };
+
+  const {
+    data: questionnaireBackendResponse,
+    isLoading,
+    isError,
+  } = useQuery<IQuestionnaireBackendResponse>('questionnaires', _mockGetQuestionnaires);
+
+  const questionnaires = questionnaireBackendResponse?.questionnaires;
 
   if (!questionnaires) return null;
 
@@ -68,7 +93,7 @@ const CoursesFeedback = () => {
       isOpen={isOpen}
     >
       <Text size="xl" weight={700}>
-        {questionnaires[currentQuestionnaireCounter].courseTitle}
+        {questionnaires[currentQuestionnaireCounter].course_title}
       </Text>
       <Stack
         sx={{
