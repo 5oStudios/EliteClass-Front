@@ -77,7 +77,7 @@ const CoursesFeedback = () => {
 
   const { data: questionnaireBackendResponse } = useQuery<IQuestionnaireBackendResponse>(
     'questionnaires',
-    _mockGetQuestionnaires
+    getQuestionnaires
   );
   const postQuestionAnswer = ({
     questionnaireId,
