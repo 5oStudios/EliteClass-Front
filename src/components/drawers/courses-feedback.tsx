@@ -1,5 +1,5 @@
 import { BaseDrawerWrapper } from '@/components/drawers/base-drawer-wrapper';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Divider, Group, Stack, Text, TextInput } from '@mantine/core';
 import ar from '@/i18n/ar/common.json';
 import en from '@/i18n/en/common.json';
@@ -69,23 +69,40 @@ const CoursesFeedback = () => {
   const t = router.locale === 'ar-kw' ? ar : en;
 
   const [currentQuestionnaireCounter, setCurrentQuestionnaireCounter] = useState<number>(0);
+  const [answers, setAnswers] = useState<IQuestionAnswer[]>([]);
   const getQuestionnaires = async () => {
     const response = await axios.get('/questionnaires/user/all');
     return response.data;
   };
 
-  const {
-    data: questionnaireBackendResponse,
-    isLoading,
-    isError,
-  } = useQuery<IQuestionnaireBackendResponse>('questionnaires', _mockGetQuestionnaires);
+  const { data: questionnaireBackendResponse } = useQuery<IQuestionnaireBackendResponse>(
+    'questionnaires',
+    _mockGetQuestionnaires
+  );
+  const postQuestionAnswer = ({
+    questionnaireId,
+    answers,
+  }: {
+    questionnaireId: number;
+    answers: IQuestionAnswer[];
+  }) => {
+    axios
+      .post(`/questionnaires/${questionnaireId}/answer`, answers)
+      .then(() => {
+        console.log('answers sent');
+        setCurrentQuestionnaireCounter((prev) => prev + 1);
+        setAnswers([]);
+        setIsOpen(false);
+      })
+      .catch((error) => console.error(error));
+  };
 
   const questionnaires = questionnaireBackendResponse?.questionnaires;
 
   if (!questionnaires) return null;
 
   const thisQuestionnaire = questionnaires[currentQuestionnaireCounter];
-
+  console.log('answers', answers);
   return (
     <BaseDrawerWrapper
       title={'Courses Feedback'}
@@ -107,7 +124,15 @@ const CoursesFeedback = () => {
         <Stack spacing={20}>
           {thisQuestionnaire.questions.map((question, questionNumber) => (
             <>
-              <Questionnaire key={question.id} question={question} />
+              <Questionnaire
+                key={question.id}
+                question={question}
+                onValuesChange={(values) => {
+                  const newAnswers = [...answers];
+                  newAnswers[questionNumber] = values;
+                  setAnswers(newAnswers);
+                }}
+              />
               {questionNumber !== thisQuestionnaire.questions.length - 1 && <Divider />}
             </>
           ))}
@@ -119,7 +144,12 @@ const CoursesFeedback = () => {
           fullWidth
           variant="filled"
           loading={false}
-          onClick={() => setIsOpen(false)}
+          onClick={() => {
+            postQuestionAnswer({
+              questionnaireId: thisQuestionnaire.id,
+              answers,
+            });
+          }}
         >
           {t.submit}
         </Button>
@@ -128,15 +158,31 @@ const CoursesFeedback = () => {
   );
 };
 
-const Questionnaire = ({ question }: { question: IQuestion }) => {
-  const form = useForm({
+interface IQuestionAnswer {
+  id: number;
+  rating: number;
+  comment: string;
+}
+const Questionnaire = ({
+  question,
+  onValuesChange,
+}: {
+  question: IQuestion;
+  onValuesChange?: (values: IQuestionAnswer) => void;
+}) => {
+  const form = useForm<IQuestionAnswer>({
     initialValues: {
-      id: 0,
-      rating: 0,
+      id: question.id,
+      rating: 0.5,
       comment: '',
     },
   });
+  useEffect(() => {
+    onValuesChange?.(form.values);
+  }, [form.values.comment, form.values.rating]);
+
   const [addComment, setAddComment] = useState<boolean>(false);
+
   return (
     <Stack sx={{}} spacing={8}>
       <Text size={'md'}>{question.title}</Text>
@@ -146,6 +192,7 @@ const Questionnaire = ({ question }: { question: IQuestion }) => {
         size={34}
         a11y={true}
         isHalf={true}
+        value={form.values.rating}
         activeColor="#ffd700"
       />
       {addComment ? (

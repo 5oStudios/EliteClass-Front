@@ -1,7 +1,7 @@
-import { getCountryCallingCode, getCountries } from 'react-phone-number-input';
+import { getCountries, getCountryCallingCode } from 'react-phone-number-input';
 import { forwardRef } from 'react';
 import { Box, Select, Text } from '@mantine/core';
-import { ChevronDownIcon } from '@modulz/radix-icons';
+// @ts-ignore
 import { CountryCode } from 'libphonenumber-js/types';
 
 interface ItemProps extends React.ComponentPropsWithoutRef<'div'> {
