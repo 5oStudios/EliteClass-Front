@@ -108,7 +108,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "npm run lint && npm run typecheck",
+      "pre-push": "sh hooks/pre-push",
       "pre-commit": "sh hooks/pre-commit"
     }
   }
