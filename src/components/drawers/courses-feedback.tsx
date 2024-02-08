@@ -9,14 +9,13 @@ import { useRouter } from 'next/router';
 import ReactStars from 'react-rating-stars-component';
 import { useQuery } from 'react-query';
 import axios from '@/components/axios/axios';
-
-const _mockGetQuestionnaires = async () => {
-  return await new Promise<IQuestionnaireBackendResponse>((resolve) => {
-    setTimeout(() => {
-      resolve(mockQuestionnaires);
-    }, 3000);
-  });
-};
+// const _mockGetQuestionnaires = async () => {
+//   return await new Promise<IQuestionnaireBackendResponse>((resolve) => {
+//     setTimeout(() => {
+//       resolve(mockQuestionnaires);
+//     }, 3000);
+//   });
+// };
 interface IQuestionnaireBackendResponse {
   message: string;
   questionnaires: IQuestionnaire[];
