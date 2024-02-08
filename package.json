@@ -13,6 +13,7 @@
     "prettier:check": "prettier --check \"**/*.{ts,tsx}\"",
     "prettier:write": "prettier --write \"**/*.{ts,tsx}\"",
     "test": "npm run prettier:check && npm run lint && npm run typecheck",
+    "test:fix": "npm run prettier:write && npm run lint -- --fix && npm run typecheck",
     "storybook": "start-storybook -p 7001",
     "storybook:build": "build-storybook",
     "prepare": "husky install"
