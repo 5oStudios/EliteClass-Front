@@ -14,27 +14,22 @@ import en from '@/i18n/en/common.json';
 export const BaseDrawerWrapper = ({
   children,
   title,
-  closeEventHandler,
+                                    isOpen,
+    onCloseHandler
 }: {
   children: React.ReactNode;
   title: string;
-  closeEventHandler: boolean;
+  onCloseHandler: ()=>void;
+  isOpen: boolean;
 }) => {
-  const [isOpen, setIsOpen] = React.useState(true);
   const { colorScheme } = useMantineColorScheme();
   const router = useRouter();
   const t = router.locale === 'ar-kw' ? ar : en;
-  useEffect(() => {
-    // Perform action when closeEventHandler changes to false
-    if (!closeEventHandler) {
-      // Add your action here
-      setIsOpen(false);
-    }
-  }, [closeEventHandler]);
+
   return (
     <Drawer
       opened={isOpen}
-      onClose={() => setIsOpen(false)}
+      onClose={onCloseHandler}
       withCloseButton={false}
       title={
         <Group position="apart" sx={{ width: '100%' }}>
@@ -43,7 +38,7 @@ export const BaseDrawerWrapper = ({
           </Text>
           <ActionIcon
             id="btn-filterClear"
-            onClick={() => setIsOpen(false)}
+            onClick={onCloseHandler}
             sx={{
               position: 'relative',
               right: '-10px',

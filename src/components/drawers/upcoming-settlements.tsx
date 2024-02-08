@@ -29,7 +29,7 @@ export const UpcomingSettlements = (props: { upcomingInstallments: AccordionLabe
   const { upcomingInstallments } = props;
   const router = useRouter();
   const t = router.locale === 'ar-kw' ? ar : en;
-  const [isOpen, setisOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(true);
 
   // const [selectedItems, setSelectedItems] = useState<selectedAccordionLabelProps[]>([]);
   const handleCardCheck = (object: AccordionLabelProps) => {
@@ -60,7 +60,7 @@ export const UpcomingSettlements = (props: { upcomingInstallments: AccordionLabe
     // console.log('Selected items:', selectedItems);
     // Add your API call logic here
     router.replace('/user/invoices');
-    setisOpen(false);
+    setIsOpen(false);
   };
 
   const overdueCourses = upcomingInstallments.map((item) => (
@@ -72,7 +72,7 @@ export const UpcomingSettlements = (props: { upcomingInstallments: AccordionLabe
   ));
 
   return (
-    <BaseDrawerWrapper title={t['upcoming-settlements']} closeEventHandler={isOpen}>
+    <BaseDrawerWrapper title={t['upcoming-settlements']} isOpen={isOpen} onCloseHandler={()=>setIsOpen(false)}>
       <Stack
         sx={{
           overflowY: 'scroll',
