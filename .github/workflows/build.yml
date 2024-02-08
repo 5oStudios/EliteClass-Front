@@ -1,0 +1,40 @@
+name: Build
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      # Cache node_modules
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+          cache-dependency-path: ./pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+
+      - run: |
+          if [ ! -n "$(git show-ref refs/heads/main)" ]; then
+            git branch --track main origin/main
+          else
+            echo "Branch 'main' already exists. Skipping branch creation."
+          fi
+
+      - run: next build
