@@ -74,7 +74,7 @@ const CoursesFeedback = () => {
     return response.data;
   };
 
-  const { data: questionnaireBackendResponse } = useQuery<IQuestionnaireBackendResponse>(
+  const { data: questionnaireBackendResponse, isError } = useQuery<IQuestionnaireBackendResponse>(
     'questionnaires',
     getQuestionnaires
   );
@@ -96,9 +96,10 @@ const CoursesFeedback = () => {
       .catch((error) => console.error(error));
   };
 
+  const isQuestionnairesEmpty = questionnaireBackendResponse?.questionnaires.length === 0;
   const questionnaires = questionnaireBackendResponse?.questionnaires;
 
-  if (!questionnaires) return null;
+  if (!questionnaires || isError || isQuestionnairesEmpty) return null;
 
   const thisQuestionnaire = questionnaires[currentQuestionnaireCounter];
   console.log('answers', answers);

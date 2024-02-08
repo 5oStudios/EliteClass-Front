@@ -170,7 +170,7 @@ function UpcomingSettlementCourseCard({
             }}
           />
         </Group>
-        <DiscountBadge value={`${price} KB`} dir={'right'} />
+        <DiscountBadge value={`${price} KWD`} dir={'right'} />
       </Stack>
     </Card>
   );
