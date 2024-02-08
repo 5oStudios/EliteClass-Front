@@ -13,7 +13,7 @@ const moduleExports = {
   },
   images: {
     domains: [
-      process.env.NEXT_PUBLIC_IMAGES_PATH,
+      process.env.NEXT_PUBLIC_IMAGES_PATH || 'localhost',
       'ui-avatars.com',
       'localhost',
       'lmsbe.enegix.co',
