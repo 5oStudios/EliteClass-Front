@@ -1,30 +1,54 @@
-# Build node js app
-FROM node:18.17-alpine
+FROM node:20-slim AS prod-deps
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+
+WORKDIR /app
+
+COPY package*.json ./
+COPY pnpm-lock.yaml ./
+
+ENV DOCKER_BUILDKIT=1
+
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --ignore-scripts
+
+
+FROM node:18.17-alpine AS builder
+
+WORKDIR /app
+
+COPY --from=prod-deps /app/node_modules ./node_modules
+
+COPY . .
+
+ENV NODE_ENV production
+
+RUN mv .env.example .env \
+    && sed -i 's/pre.panel.lms.elite-class.com/dash.staging.elite-class.com/g' .env \
+    && sed -i 's/pre.lms.elite-class.com/app.staging.elite-class.com/g' .env \
+    && npm run build
+
+FROM node:18.17-alpine AS runner
 
 ARG USERNAME=studios
 ARG GROUP_NAME=studios
 ARG UID=1001
 ARG GID=1001
 
-WORKDIR /app
-
-COPY . .
-
-RUN mv .env.example .env  \
-    && sed -i 's/pre.panel.lms.elite-class.com/dash.staging.elite-class.com/g' .env \
-    && sed -i 's/pre.lms.elite-class.com/app.staging.elite-class.com/g' .env \
-    && npm install pm2 -g;
-
-RUN npm install --force \
-    && npm run build;
-
-EXPOSE 3000
-
 RUN addgroup --gid ${GID} --system ${GROUP_NAME}
 RUN adduser --system --ingroup ${GROUP_NAME} --shell /bin/bash --uid ${UID} --disabled-password ${USERNAME}
-RUN chown -R ${USERNAME}:${GROUP_NAME} .
 
 USER $USERNAME
 
-# Run node js app
+WORKDIR /app
+
+COPY --from=builder --chown=${USERNAME}:${GROUP_NAME} /app/.next ./.next
+#COPY --from=builder /app/node_modules ./node_modules
+#COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/ ./
+
+EXPOSE 3000
+
+ENV NODE_ENV production
+
 CMD ["npm", "run", "start"]
