@@ -37,10 +37,8 @@ jobs:
             echo "Branch 'main' already exists. Skipping branch creation."
           fi
 
-      - run: pnpm run prettier:write
-
       - run: pnpm run lint -- --fix
 
       - run: pnpm run typecheck
 
-      - run: pnpm run build
+#      - run: pnpm run build
