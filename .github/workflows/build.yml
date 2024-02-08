@@ -37,4 +37,4 @@ jobs:
             echo "Branch 'main' already exists. Skipping branch creation."
           fi
 
-      - run: next build
+      - run: pnpm run build
