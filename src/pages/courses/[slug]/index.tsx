@@ -631,7 +631,7 @@ const CourseDetails: NextPage = () => {
                         width={'100%'}
                         height={'100%'}
                         frameBorder="0"
-                        allow="accelerometer; gyroscope; encrypted-media; autoplay; fullscreen; picture-in-picture"
+                        allow="accelerometer; gyroscope; encrypted-media; autoplay; picture-in-picture"
                         allowFullScreen={false}
                       />
                     ) : (
