@@ -15,7 +15,6 @@ import {
 } from '@mantine/core';
 import React, { useEffect, useState } from 'react';
 import NextImage from 'next/image';
-import { useBlur } from '@/utils/hooks/useBlur';
 import { SaveIcon, UnSaveIcon } from '@/src/constants/icons';
 import Link from 'next/link';
 import axios from '@/components/axios/axios.js';
@@ -25,7 +24,6 @@ import { getCookie } from 'cookies-next';
 import { useQueryClient } from 'react-query';
 import useNextBlurhash from 'use-next-blurhash';
 import { DiscountBadge } from '@/components/badges/discount-badge';
-
 import { shimmer, toBase64 } from '@/utils/utils';
 import en from '@/src/constants/locales/en-us/common.json';
 import ar from '@/src/constants/locales/ar-kw/common.json';
@@ -154,9 +152,7 @@ const Layout1 = ({
                     setImg('/assets/images/default.png');
                   }}
                 />
-                <Box>
-                  {haveOffer && <DiscountBadge value={`${discountAmount}${t.KWD}`} dir={'left'} />}
-                </Box>
+                <Box>{haveOffer && <DiscountBadge value={discountAmount} dir={'left'} />}</Box>
               </AspectRatio>
             </MediaQuery>
             <MediaQuery largerThan="xs" styles={{ display: 'none' }}>

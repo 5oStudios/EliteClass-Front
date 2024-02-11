@@ -69,6 +69,7 @@ const CoursesFeedback = () => {
 
   const [currentQuestionnaireCounter, setCurrentQuestionnaireCounter] = useState<number>(0);
   const [answers, setAnswers] = useState<IQuestionAnswer[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const getQuestionnaires = async () => {
     const response = await axios.get('/questionnaires/user/all');
     return response.data;
@@ -85,15 +86,18 @@ const CoursesFeedback = () => {
     questionnaireId: number;
     answers: IQuestionAnswer[];
   }) => {
+    setLoading(true);
     axios
-      .post(`/questionnaires/${questionnaireId}/answer`, answers)
+      .post(`/questionnaires/${questionnaireId}/answer`, {
+        answers,
+      })
       .then(() => {
-        console.log('answers sent');
+        setLoading(false);
         setCurrentQuestionnaireCounter((prev) => prev + 1);
         setAnswers([]);
-        setIsOpen(false);
       })
-      .catch((error) => console.error(error));
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
   };
 
   const isQuestionnairesEmpty = questionnaireBackendResponse?.questionnaires.length === 0;
@@ -143,7 +147,7 @@ const CoursesFeedback = () => {
           size={'md'}
           fullWidth
           variant="filled"
-          loading={false}
+          loading={loading}
           onClick={() => {
             postQuestionAnswer({
               questionnaireId: thisQuestionnaire.id,
@@ -159,9 +163,9 @@ const CoursesFeedback = () => {
 };
 
 interface IQuestionAnswer {
-  id: number;
-  rating: number;
-  comment: string;
+  question_id: number;
+  rate: number;
+  answer: string;
 }
 const Questionnaire = ({
   question,
@@ -172,14 +176,14 @@ const Questionnaire = ({
 }) => {
   const form = useForm<IQuestionAnswer>({
     initialValues: {
-      id: question.id,
-      rating: 0.5,
-      comment: '',
+      question_id: question.id,
+      rate: 0.5,
+      answer: '',
     },
   });
   useEffect(() => {
     onValuesChange?.(form.values);
-  }, [form.values.comment, form.values.rating]);
+  }, [form.values.answer, form.values.rate]);
 
   const [addComment, setAddComment] = useState<boolean>(false);
 
@@ -188,18 +192,18 @@ const Questionnaire = ({
       <Text size={'md'}>{question.title}</Text>
       <ReactStars
         count={5}
-        onChange={(newRating: any) => form.setFieldValue('rating', newRating)}
+        onChange={(newRating: any) => form.setFieldValue('rate', newRating)}
         size={34}
         a11y={true}
         isHalf={true}
-        value={form.values.rating}
+        value={form.values.rate}
         activeColor="#ffd700"
       />
       {addComment ? (
         <TextInput
           key={question.id}
           placeholder="Enter your answer"
-          {...form.getInputProps('comment')}
+          {...form.getInputProps('answer')}
         />
       ) : (
         <Button onClick={() => setAddComment(true)} variant={'outline'}>
