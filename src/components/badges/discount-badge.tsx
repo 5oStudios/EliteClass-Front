@@ -1,7 +1,7 @@
 import { Badge, BadgeProps } from '@mantine/core';
 
 interface DiscountBadge {
-  value: string | number;
+  value: string | number | undefined;
   dir: 'left' | 'right';
 }
 export const DiscountBadge = (props: BadgeProps<any> & DiscountBadge) => {
