@@ -9,6 +9,7 @@ import { useRouter } from 'next/router';
 import ReactStars from 'react-rating-stars-component';
 import { useQuery } from 'react-query';
 import axios from '@/components/axios/axios';
+import { showNotification } from '@mantine/notifications';
 // const _mockGetQuestionnaires = async () => {
 //   return await new Promise<IQuestionnaireBackendResponse>((resolve) => {
 //     setTimeout(() => {
@@ -59,63 +60,113 @@ const mockQuestionnaires: IQuestionnaireBackendResponse = {
         },
       ],
     },
+    {
+      id: 2,
+      course_id: 1119,
+      course_title: 'this is course title',
+      questionnaire_title: 'this is questionnaire title2',
+      questionnaire_appointment: '2024-02-07',
+      questions: [
+        {
+          id: 4,
+          title: 'q1 title 2',
+        },
+        {
+          id: 5,
+          title: 'q2 title 2',
+        },
+        {
+          id: 6,
+          title: 'q3 title 2',
+        },
+      ],
+    },
+    {
+      id: 2,
+      course_id: 1119,
+      course_title: 'this is course title',
+      questionnaire_title: 'this is questionnaire title2',
+      questionnaire_appointment: '2024-02-07',
+      questions: [
+        {
+          id: 4,
+          title: 'q1 title 2',
+        },
+        {
+          id: 5,
+          title: 'q2 title 2',
+        },
+        {
+          id: 6,
+          title: 'q3 title 2',
+        },
+      ],
+    },
   ],
 };
 
 const CoursesFeedback = () => {
-  const [isOpen, setIsOpen] = useState(true);
   const router = useRouter();
   const t = router.locale === 'ar-kw' ? ar : en;
 
-  const [currentQuestionnaireCounter, setCurrentQuestionnaireCounter] = useState<number>(0);
-  const [answers, setAnswers] = useState<IQuestionAnswer[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [currentQuestionnaireIndex, setCurrentQuestionnaireIndex] = useState(0);
+  const [answers, setAnswers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
+
   const getQuestionnaires = async () => {
     const response = await axios.get('/questionnaires/user/all');
     return response.data;
   };
 
-  const { data: questionnaireBackendResponse, isError } = useQuery<IQuestionnaireBackendResponse>(
-    'questionnaires',
-    getQuestionnaires
-  );
-  const postQuestionAnswer = ({
-    questionnaireId,
-    answers,
-  }: {
-    questionnaireId: number;
-    answers: IQuestionAnswer[];
-  }) => {
+  const {
+    data: questionnairesData,
+    isError,
+    error,
+  } = useQuery<IQuestionnaireBackendResponse>('questionnaires', getQuestionnaires);
+
+  if (isError || !questionnairesData || questionnairesData.questionnaires.length === 0) return null;
+
+  const { questionnaires } = questionnairesData;
+  const currentQuestionnaire = questionnaires[currentQuestionnaireIndex];
+
+  const postQuestionAnswer = async () => {
     setLoading(true);
-    axios
-      .post(`/questionnaires/${questionnaireId}/answer`, {
+    try {
+      await axios.post(`/questionnaires/${currentQuestionnaire.id}/answer`, {
         answers,
-      })
-      .then(() => {
-        setLoading(false);
-        setCurrentQuestionnaireCounter((prev) => prev + 1);
-        setAnswers([]);
-      })
-      .catch((error) => console.error(error))
-      .finally(() => setLoading(false));
+      });
+      setLoading(false);
+      setAnswers([]);
+      if (currentQuestionnaireIndex < questionnaires.length - 1) {
+        setCurrentQuestionnaireIndex((prevIndex) => prevIndex + 1);
+      } else {
+        setIsOpen(false);
+      }
+      showNotification({
+        message: 'Your feedback has been submitted successfully',
+        color: 'teal',
+      });
+    } catch (error) {
+      setLoading(false);
+      showNotification({
+        title: 'Error',
+        message: 'Something went wrong',
+        color: 'red',
+      });
+    }
   };
 
-  const isQuestionnairesEmpty = questionnaireBackendResponse?.questionnaires.length === 0;
-  const questionnaires = questionnaireBackendResponse?.questionnaires;
-
-  if (!questionnaires || isError || isQuestionnairesEmpty) return null;
-
-  const thisQuestionnaire = questionnaires[currentQuestionnaireCounter];
-  console.log('answers', answers);
   return (
     <BaseDrawerWrapper
-      title={'Courses Feedback'}
+      title={'Course Feedback: ' + currentQuestionnaire.course_title}
       onCloseHandler={() => setIsOpen(false)}
       isOpen={isOpen}
     >
       <Text size="xl" weight={700}>
-        {questionnaires[currentQuestionnaireCounter].course_title}
+        {questionnaires[currentQuestionnaireIndex].questionnaire_title}
       </Text>
+
       <Stack
         sx={{
           overflowY: 'scroll',
@@ -126,18 +177,19 @@ const CoursesFeedback = () => {
         spacing={6}
       >
         <Stack spacing={20}>
-          {thisQuestionnaire.questions.map((question, questionNumber) => (
+          {currentQuestionnaire.questions.map((question, questionNumber) => (
             <>
               <Questionnaire
                 key={question.id}
                 question={question}
                 onValuesChange={(values) => {
                   const newAnswers = [...answers];
+                  // @ts-ignore
                   newAnswers[questionNumber] = values;
                   setAnswers(newAnswers);
                 }}
               />
-              {questionNumber !== thisQuestionnaire.questions.length - 1 && <Divider />}
+              {questionNumber !== currentQuestionnaire.questions.length - 1 && <Divider />}
             </>
           ))}
         </Stack>
@@ -148,12 +200,7 @@ const CoursesFeedback = () => {
           fullWidth
           variant="filled"
           loading={loading}
-          onClick={() => {
-            postQuestionAnswer({
-              questionnaireId: thisQuestionnaire.id,
-              answers,
-            });
-          }}
+          onClick={postQuestionAnswer}
         >
           {t.submit}
         </Button>
@@ -165,7 +212,7 @@ const CoursesFeedback = () => {
 interface IQuestionAnswer {
   question_id: number;
   rate: number;
-  answer: string;
+  answer?: string;
 }
 const Questionnaire = ({
   question,
@@ -178,7 +225,7 @@ const Questionnaire = ({
     initialValues: {
       question_id: question.id,
       rate: 0.5,
-      answer: '',
+      // answer: '',
     },
   });
   useEffect(() => {
