@@ -284,18 +284,20 @@ export const Chapter = ({
         <Stack
           id={`btn-chapter-${chapter?.id}`}
           onClick={() => {
-            if (chapter?.type === 'live-streaming') {
-              router.push({
-                pathname: `/live-sessions/[typeId]`,
-                query: { typeId: chapter?.type_id, type: 'course' },
-              });
-            } else if (chapter?.type === 'in-person-session') {
-              router.push({
-                pathname: `/in-person-sessions/[typeId]`,
-                query: { typeId: chapter?.type_id, type: 'course' },
-              });
-            } else {
-              setExpent(!expent);
+            if (!chapter?.is_lock) {
+              if (chapter?.type === 'live-streaming') {
+                router.push({
+                  pathname: `/live-sessions/[typeId]`,
+                  query: { typeId: chapter?.type_id, type: 'course' },
+                });
+              } else if (chapter?.type === 'in-person-session') {
+                router.push({
+                  pathname: `/in-person-sessions/[typeId]`,
+                  query: { typeId: chapter?.type_id, type: 'course' },
+                });
+              } else {
+                setExpent(!expent);
+              }
             }
           }}
           sx={{
@@ -357,6 +359,7 @@ export const Chapter = ({
               </Stack>
             </Text>
           </Box>
+          {chapter.is_lock && <LockIcon />}
         </Stack>
         {/* </Group> */}
 
