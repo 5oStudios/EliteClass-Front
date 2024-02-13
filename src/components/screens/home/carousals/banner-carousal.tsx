@@ -9,7 +9,7 @@ import styles from '@/src/styles/swiper-paginiation.module.css';
 import NextImage from 'next/image';
 import useNextBlurhash from 'use-next-blurhash';
 import { shimmer, toBase64 } from '@/utils/utils';
-
+import { useOs } from '@mantine/hooks';
 const Card1 = (props: any) => {
   const [blurDataUrl] = useNextBlurhash('LEHV6nWB2yk8pyo0adR*.7kCMdnj');
   const [defaul, setDefaul] = useState(false);
@@ -50,12 +50,23 @@ const Card1 = (props: any) => {
 };
 
 export const BannerCarousal = (props: any) => {
+  const os = useOs();
   let cards = [];
   cards = props?.bCarousal;
 
   const handleClick = (item: any) => {
-    if (item.link !== null) {
-      window.open(item.link, '_blank');
+    if (os === 'ios' || os === 'android') {
+      if (item.link !== null) {
+        let urlToMobile = item.link;
+        if (!urlToMobile.startsWith('https://') || !urlToMobile.startsWith('http://')) {
+          urlToMobile = 'https://' + item.link;
+        }
+        console.log('link to open: ', urlToMobile);
+      }
+    } else {
+      if (item.link !== null) {
+        window.open(item.link, '_blank');
+      }
     }
   };
   return (
