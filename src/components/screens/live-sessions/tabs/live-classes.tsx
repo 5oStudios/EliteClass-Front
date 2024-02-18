@@ -10,7 +10,7 @@ import {
 import axios from '@/components/axios/axios.js';
 import moment from 'moment';
 import { showNotification } from '@mantine/notifications';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import NextImage from 'next/image';
 import momentWithTimeZone from 'moment-timezone';
@@ -45,6 +45,21 @@ export const LiveSessionLessionsTab = ({
   const [joining, setJoining] = useState<boolean>(false);
   const { colorScheme } = useMantineColorScheme();
   let isButton: boolean = false;
+  const videoRef = useRef(null);
+
+  const toggleFullscreen = () => {
+    const videoElement: any = videoRef.current;
+
+    if (videoElement.requestFullscreen) {
+      videoElement.requestFullscreen();
+    } else if (videoElement.mozRequestFullScreen) {
+      videoElement.mozRequestFullScreen();
+    } else if (videoElement.webkitRequestFullscreen) {
+      videoElement.webkitRequestFullscreen();
+    } else if (videoElement.msRequestFullscreen) {
+      videoElement.msRequestFullscreen();
+    }
+  };
   // const [isRecording, setIsRecording] = useState<boolean>(false);
   // let showDateTime: boolean = false;
   // let showTime: boolean = false;
@@ -283,11 +298,19 @@ export const LiveSessionLessionsTab = ({
               <>
                 <iframe
                   title="Recorded video"
-                  style={{ marginLeft: '0.6rem', marginRight: '0.6rem', borderRadius: '0.5rem' }}
-                  width={'auto'}
-                  height={'690vh'}
+                  style={{
+                    marginTop: '0.6rem',
+                    marginLeft: '0.6rem',
+                    marginRight: '0.6rem',
+                    borderRadius: '0.5rem',
+                  }}
+                  width={window.innerWidth - 20}
+                  ref={videoRef}
+                  height={'640vh'}
                   src={url[0] + '?l=content'}
                 />
+                <Button onClick={toggleFullscreen}>{t.fullscreen}</Button>
+
                 {/* {is_ended && isPartOfCourse && !is_complete && (
                   <Button
                     fullWidth
