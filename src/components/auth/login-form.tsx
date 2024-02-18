@@ -3,7 +3,9 @@ import ar from '@/src/constants/locales/ar-kw/common.json';
 import en from '@/src/constants/locales/en-us/common.json';
 import { validateEmail } from '@/src/utils/check-email-validation';
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
-import { useVisitorData } from '@fingerprintjs/fingerprintjs-pro-react';
+// import { useVisitorData } from '@fingerprintjs/fingerprintjs-pro-react';
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
+
 import {
   Anchor,
   Box,
@@ -44,7 +46,7 @@ export const LoginForm = (
   }: InferGetServerSidePropsType<typeof getServerSideProps>
 ) => {
   // const {data} = useSession();
-  const fp: any = useVisitorData();
+
   const router = useRouter();
   // console.log('FINGER_PRINT', fp);
   // const obj = {
@@ -56,6 +58,7 @@ export const LoginForm = (
   const [submitting, setSubmitting] = useState<Boolean>(false);
   const [activeTab, setActiveTab] = useState(0);
   const [keyboardIsOpen, setKeyboardIsOpen] = useState(false);
+  const [fp, setfp] = useState('');
   // language
   const langRouter = useRouter();
   const { colorScheme } = useMantineColorScheme();
@@ -109,12 +112,18 @@ export const LoginForm = (
 
   type FormValues = typeof form.values;
 
-  // get previous url from browser history
-
   useEffect(() => {
     const data = hasCookie('access_token');
     //console.log({ data });
     const previousUrl = getCookie('prevPath');
+
+    const getFingerprint = async () => {
+      const fp = await FingerprintJS.load();
+      const result = await fp.get();
+      console.log('Fingerprint:', result.visitorId);
+      setfp(result.visitorId || '');
+    };
+    getFingerprint();
     //console.log(previousUrl);
 
     // if (data === 'true') {
@@ -153,11 +162,13 @@ export const LoginForm = (
     // return  signIn();
     if (!submitting) {
       setSubmitting(true);
+      console.log(fp);
+
       axios
         .post('login', {
           username: values.email,
           ...values,
-          fpjsid: fp?.data?.visitorId || '',
+          fpjsid: fp,
         })
         .then((response) => {
           //setCookie('user_id', parseJwtToken(response?.data?.access_token).sub);
@@ -213,8 +224,9 @@ export const LoginForm = (
               var oneSignalId = JSON.stringify({
                 //@ts-ignore
                 player_device_id: player_id || '',
-                fpjsid: fp?.data?.visitorId || '',
+                fpjsid: fp,
               });
+
               sendPlayerIDTowardBackend(oneSignalId);
             }
           }
@@ -414,7 +426,7 @@ export const LoginForm = (
                         form.setValues((state) => ({ ...state, email: number as string }));
                         form.clearFieldError('email');
                       }}
-                      textInputProps={{ placeholderTextColor: 'red' }}
+                      textinputprops={{ placeholderTextColor: 'red' }}
                       sx={{
                         direction: router.locale === 'ar-kw' ? 'rtl' : 'ltr',
                       }}

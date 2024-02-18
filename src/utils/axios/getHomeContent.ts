@@ -55,7 +55,6 @@ export const getHomeContent = async ({
       },
     }
   );
-  //hereeee
   response.data.packages.data.forEach((el: any) => {
     if (el.discount_type !== null && el.discount_price !== 0) {
       el.haveOffer = true;
@@ -95,7 +94,7 @@ export const getHomeContent = async ({
       }
     }
   });
-  console.log(response.data);
+  // console.log(response.data);
 
   return response.data;
 };

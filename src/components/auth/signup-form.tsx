@@ -37,8 +37,9 @@ import { axiosServer } from '../axios/axios-server';
 //import { useVisitorData } from '@fingerprintjs/fingerprintjs-pro-react';
 import AppContext from '@/context/context';
 import { sendPlayerIDTowardBackend } from '@/utils/utils';
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
+
 export const SignUpForm = () => {
-  const fp: any = {}; //useVisitorData();
   // language
   const router = useRouter();
   const t = router.locale === 'ar-kw' ? ar : en;
@@ -60,6 +61,8 @@ export const SignUpForm = () => {
   const [majorVal, setMajor] = useState<string>('');
   const [majorValue, setMajorValue] = useState<number>();
   const [InstitudeValue, setInstitudeValue] = useState<number>();
+  const [fp, setfp] = useState('');
+
   const [typeOfInstitude, setTypeOfInstitude] = useState<string>('');
   const [typeCategoryApi, setTypeCategoryApi] = useState([]);
   const [instituteEror, setInstituteError] = useState<boolean>(false);
@@ -95,6 +98,15 @@ export const SignUpForm = () => {
       handlemajorApi();
     }
   }, [typeCategoryApi, majorCategoryApi]);
+  useEffect(() => {
+    const getFingerprint = async () => {
+      const fp = await FingerprintJS.load();
+      const result = await fp.get();
+      console.log('Fingerprint:', result.visitorId);
+      setfp(result.visitorId || '');
+    };
+    getFingerprint();
+  }, []);
   const form = useForm({
     initialValues: {
       email: '',
@@ -177,7 +189,7 @@ export const SignUpForm = () => {
         ...values,
         institute: InstitudeValue,
         major: majorValue,
-        fpjsid: fp?.data?.visitorId || '',
+        fpjsid: fp || '',
       }),
     {
       onSuccess: (data) => {
@@ -234,7 +246,7 @@ export const SignUpForm = () => {
               var oneSignalId = JSON.stringify({
                 //@ts-ignore
                 player_device_id: player_id || '',
-                fpjsid: fp?.data?.visitorId || '',
+                fpjsid: fp || '',
               });
               sendPlayerIDTowardBackend(oneSignalId);
             }

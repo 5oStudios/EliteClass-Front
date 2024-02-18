@@ -15,6 +15,7 @@ import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import rtlPlugin from 'stylis-plugin-rtl';
 import axios from '@/components/axios/axios';
+
 // import OpenReplay from '@openreplay/tracker';
 import '../styles/accessdenied.css';
 import AppContext from '../../context/context';
@@ -78,12 +79,8 @@ export const App = (props: AppProps & { colorScheme: ColorScheme; locale: string
   //   }
   // }, [trackerCheck]);
 
-  const upcomingInstallments = (userId: string | null) => {
-    console.log('im here');
-
-    axios.get(`/overdue/${userId}`).then((response: any) => {
-      console.log(response);
-
+  const upcomingInstallments = () => {
+    axios.get(`/overdue/`).then((response: any) => {
       setupcoming(
         response.data.map((data: any) => {
           return {
@@ -125,9 +122,8 @@ export const App = (props: AppProps & { colorScheme: ColorScheme; locale: string
   let layoutDirection = getLayoutDirection(router.locale);
 
   useEffect(() => {
-    const userId = localStorage.getItem('user_id');
-    if (userId) {
-      upcomingInstallments(userId);
+    if (token) {
+      upcomingInstallments();
     }
     document.documentElement.dir = layoutDirection;
   }, [layoutDirection]);
@@ -268,6 +264,7 @@ export const App = (props: AppProps & { colorScheme: ColorScheme; locale: string
                 dir: locale === 'ar-kw' ? 'rtl' : 'ltr',
                 focusRing: 'never',
                 shadows: {
+                  //@ts-ignore
                   shadow1: '0px 2px 4px rgba(0, 0, 0, 0.07)',
                 },
                 primaryColor: 'primary',
@@ -297,16 +294,7 @@ export const App = (props: AppProps & { colorScheme: ColorScheme; locale: string
                 <NextNProgress color="#E2BB50" options={{ showSpinner: false }} />
                 {
                   //@ts-ignore
-                  getLayout(
-                    <AppContext.Provider
-                    // value={{
-                    //   tracker,
-                    //   setTracker: setUserTracker,
-                    // }}
-                    >
-                      <Component {...pageProps} />
-                    </AppContext.Provider>
-                  )
+                  getLayout(<Component {...pageProps} />)
                 }
               </NotificationsProvider>
               {upcomingDrawer && <UpcomingSettlements upcomingInstallments={upcoming} />}
