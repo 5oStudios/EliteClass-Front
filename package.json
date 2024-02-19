@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@cyntler/react-doc-viewer": "1.13.0",
+    "@fingerprintjs/fingerprintjs": "^4.2.2",
     "@fingerprintjs/fingerprintjs-pro-react": "^1.5.0",
     "@mantine/core": "4.2.2",
     "@mantine/dates": "^4.2.6",
@@ -111,7 +112,7 @@
     "hooks": {
       "pre-push": "sh hooks/pre-push",
       "pre-commit": "sh hooks/pre-commit",
-        "post-merge": "sh hooks/post-merge"
+      "post-merge": "sh hooks/post-merge"
     }
   }
 }

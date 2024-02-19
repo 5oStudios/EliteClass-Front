@@ -8,6 +8,9 @@ dependencies:
   '@cyntler/react-doc-viewer':
     specifier: 1.13.0
     version: 1.13.0(@babel/core@7.23.7)(@types/react@17.0.43)(react-dom@17.0.2)(react-is@18.2.0)(react@17.0.2)(webpack@5.89.0)
+  '@fingerprintjs/fingerprintjs':
+    specifier: ^4.2.2
+    version: 4.2.2
   '@fingerprintjs/fingerprintjs-pro-react':
     specifier: ^1.5.0
     version: 1.5.0
@@ -2876,6 +2879,12 @@ packages:
 
   /@fingerprintjs/fingerprintjs-pro@3.8.7:
     resolution: {integrity: sha512-PzIuXrtKwpWFrTC3LARRZ2kTmgyJC8PNuPa3DXsXbHE1dnNBqewryfX+yDCX+uBUbWu01qHsqPdsX1Zl6Rh5UQ==}
+    dependencies:
+      tslib: 2.6.2
+    dev: false
+
+  /@fingerprintjs/fingerprintjs@4.2.2:
+    resolution: {integrity: sha512-scD+pDgNZW78LuFAr7ms2yxmDx2NWC4+K5iiOjPT2ZlTlHFbLsORUzLJI2rcKicxxLtHbvf3A7BU1drVr4iHGg==}
     dependencies:
       tslib: 2.6.2
     dev: false
@@ -17374,6 +17383,7 @@ packages:
 
   /workbox-google-analytics@4.3.1:
     resolution: {integrity: sha512-xzCjAoKuOb55CBSwQrbyWBKqp35yg1vw9ohIlU2wTy06ZrYfJ8rKochb1MSGlnoBfXGWss3UPzxR5QL5guIFdg==}
+    deprecated: It is not compatible with newer versions of GA starting with v4, as long as you are using GAv3 it should be ok, but the package is not longer being maintained
     dependencies:
       workbox-background-sync: 4.3.1
       workbox-core: 4.3.1

@@ -1,11 +1,12 @@
 import { Seo } from '@/components/seo';
 import { Box, Button, Container, Space, Stack, Text } from '@mantine/core';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import VerificationInput from 'react-verification-input';
 import styles from '@/src/styles/verfication-input.module.css';
 import axios from '@/components/axios/axios';
 import { showNotification } from '@mantine/notifications';
+
 import { useRouter } from 'next/router';
 import { setCookie } from 'cookies-next';
 import ResentEmailCode from '@/components/ui/ResentEmailCode';
@@ -14,15 +15,25 @@ import { GoBack } from '@/components/ui/GoBack';
 import ar from '@/src/constants/locales/ar-kw/common.json';
 import en from '@/src/constants/locales/en-us/common.json';
 import { sendPlayerIDTowardBackend } from '@/utils/utils';
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
 
 const VerifyPage = () => {
-  const fp: any = {}; //useVisitorData();
   const [code, setCode] = React.useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [disableLink, setDisableLink] = useState(false);
   const router = useRouter();
   const t = router.locale === 'ar-kw' ? ar : en;
+  const [fp, setfp] = useState('');
 
+  useEffect(() => {
+    const getFingerprint = async () => {
+      const fp = await FingerprintJS.load();
+      const result = await fp.get();
+      console.log('Fingerprint:', result.visitorId);
+      setfp(result.visitorId || '');
+    };
+    getFingerprint();
+  }, []);
   const verifyCode = async () => {
     const email = localStorage.getItem('user_email');
     if (code.length === 4) {
@@ -90,7 +101,7 @@ const VerifyPage = () => {
                 var oneSignalId = JSON.stringify({
                   //@ts-ignore
                   player_device_id: player_id || '',
-                  fpjsid: fp?.data?.visitorId || '',
+                  fpjsid: fp || '',
                 });
                 sendPlayerIDTowardBackend(oneSignalId);
               }

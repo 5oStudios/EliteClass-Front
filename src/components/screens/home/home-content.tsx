@@ -10,11 +10,13 @@ import { PackagesCarousal } from './carousals/packages-carousal';
 import ar from '@/src/constants/locales/ar-kw/common.json';
 import en from '@/src/constants/locales/en-us/common.json';
 import { getCookie } from 'cookies-next';
-import { useVisitorData } from '@fingerprintjs/fingerprintjs-pro-react';
-import { useEffect } from 'react';
+// import { useVisitorData } from '@fingerprintjs/fingerprintjs-pro-react';
+import { useEffect, useState } from 'react';
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
 
 export const HomeContent = (props: any) => {
-  const fp = useVisitorData();
+  const [fp, setfp] = useState('');
+
   // console.log('FP:', fp);
 
   const router = useRouter();
@@ -40,6 +42,13 @@ export const HomeContent = (props: any) => {
       window.ReactNativeWebView.postMessage(objTwoStringfy);
       //@ts-ignore
       localStorage.setItem('userPlayerId', 'true');
+      const getFingerprint = async () => {
+        const fp = await FingerprintJS.load();
+        const result = await fp.get();
+        console.log('Fingerprint:', result.visitorId);
+        setfp(result.visitorId || '');
+      };
+      getFingerprint();
     }
     // }
   }, []);

@@ -5,6 +5,8 @@ import ar from '@/i18n/ar/common.json';
 import en from '@/i18n/en/common.json';
 import { useForm } from '@mantine/form';
 import { useRouter } from 'next/router';
+import { getCookie } from 'cookies-next';
+
 // @ts-ignore
 import ReactStars from 'react-rating-stars-component';
 import { useQuery } from 'react-query';
@@ -108,6 +110,7 @@ const mockQuestionnaires: IQuestionnaireBackendResponse = {
 const CoursesFeedback = () => {
   const router = useRouter();
   const t = router.locale === 'ar-kw' ? ar : en;
+  const token: any = getCookie('access_token');
 
   const [currentQuestionnaireIndex, setCurrentQuestionnaireIndex] = useState(0);
   const [answers, setAnswers] = useState([]);
@@ -115,8 +118,12 @@ const CoursesFeedback = () => {
   const [isOpen, setIsOpen] = useState(true);
 
   const getQuestionnaires = async () => {
-    const response = await axios.get('/questionnaires/user/all');
-    return response.data;
+    if (token) {
+      const response = await axios.get('/questionnaires/user/all');
+      return response.data;
+    } else {
+      return '';
+    }
   };
 
   const {

@@ -55,16 +55,12 @@ export const BannerCarousal = (props: any) => {
   cards = props?.bCarousal;
 
   const handleClick = (item: any) => {
-    if (os === 'ios' || os === 'android') {
-      if (item.link !== null) {
-        let urlToMobile = item.link;
-        if (!urlToMobile.startsWith('https://') || !urlToMobile.startsWith('http://')) {
-          urlToMobile = 'https://' + item.link;
-        }
-        console.log('link to open: ', urlToMobile);
-      }
+    if (item.link.startsWith('https://lms') || item.link.startsWith('https://lms')) {
+      window.open(item.link);
     } else {
-      if (item.link !== null) {
+      if (os === 'ios' || os === 'android') {
+        console.log('link to open: ', item.link);
+      } else {
         window.open(item.link, '_blank');
       }
     }
