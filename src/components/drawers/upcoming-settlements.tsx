@@ -17,7 +17,6 @@ import { DiscountBadge } from '@/components/badges/discount-badge';
 import axios from '@/components/axios/axios';
 import { LoadingScreen } from '../ui/loader-screen';
 interface AccordionLabelProps {
-  id: string;
   typeId: string;
   type: string;
   title: string;
@@ -79,7 +78,7 @@ export const UpcomingSettlements = (props: { upcomingInstallments: AccordionLabe
 
   const overdueCourses = upcomingInstallments.map((item) => (
     <UpcomingSettlementCourseCard
-      key={item.id}
+      key={item.typeId}
       {...item}
       onCardCheck={() => handleCardCheck(item)}
     />
@@ -114,7 +113,6 @@ interface UpcomingSettlementCourseCardProps extends AccordionLabelProps {
 }
 
 function UpcomingSettlementCourseCard({
-  id,
   title,
   installments,
   onCardCheck,
