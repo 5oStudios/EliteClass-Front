@@ -18,7 +18,6 @@ import axios from '@/components/axios/axios';
 
 // import OpenReplay from '@openreplay/tracker';
 import '../styles/accessdenied.css';
-import AppContext from '../../context/context';
 import { UpcomingSettlements } from '@/components/drawers/upcoming-settlements';
 import CoursesFeedback from '@/components/drawers/courses-feedback';
 
@@ -27,8 +26,13 @@ interface AccordionLabelProps {
   typeId: string;
   type: string;
   title: string;
+  installments: Array<installment>;
+}
+interface installment {
+  id: string;
   due_date: string;
-  price: number;
+  amount: string;
+  is_selected: boolean;
 }
 
 export const App = (props: AppProps & { colorScheme: ColorScheme; locale: string }) => {
@@ -89,8 +93,7 @@ export const App = (props: AppProps & { colorScheme: ColorScheme; locale: string
             type: data.type,
             image: data.image,
             title: data.name,
-            due_date: data.dueDate,
-            price: data.amount,
+            installments: data.installments,
           };
         })
       );
