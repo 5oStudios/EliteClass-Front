@@ -308,10 +308,8 @@ export const App = (props: AppProps & { colorScheme: ColorScheme; locale: string
                   )
                 }
               </NotificationsProvider>
-              {/* {
 
               {upcomingDrawer && <UpcomingSettlements upcomingInstallments={upcoming} />}
-              } */}
               <CoursesFeedback />
             </MantineProvider>
           </ColorSchemeProvider>
