@@ -134,12 +134,12 @@ function UpcomingSettlementCourseCard({
   const handleCheckboxChange = (el: installment) => {
     setIsLoading(true);
     const url = '/pending/instalments';
-    const object = el.is_selected ? { remove_payment_plan_id: el.id } : { payment_plan_id: el.id };
+    const object = el?.is_selected ? { remove_payment_plan_id: el.id } : { payment_plan_id: el.id };
     axios
       .post(url, object)
       .then((response) => {
         console.log(response);
-        el.is_selected = !el.is_selected;
+        el.is_selected = !el?.is_selected;
         setIsLoading(false);
         setChecked(!checked);
       })
@@ -186,7 +186,7 @@ function UpcomingSettlementCourseCard({
                   border: darkMode ? '1px solid gray' : '',
                   borderRadius: '5px',
                 }}
-                defaultChecked={el.is_selected}
+                defaultChecked={el?.is_selected}
                 wrapperProps={{
                   onClick: () => handleCheckboxChange(el),
                 }}
