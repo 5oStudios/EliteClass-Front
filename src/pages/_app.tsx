@@ -22,7 +22,6 @@ import { UpcomingSettlements } from '@/components/drawers/upcoming-settlements';
 import CoursesFeedback from '@/components/drawers/courses-feedback';
 
 interface AccordionLabelProps {
-  id: string;
   typeId: string;
   type: string;
   title: string;
@@ -88,7 +87,6 @@ export const App = (props: AppProps & { colorScheme: ColorScheme; locale: string
       setupcoming(
         response.data.map((data: any) => {
           return {
-            id: data.installmentId,
             typeId: data.typeId,
             type: data.type,
             image: data.image,
