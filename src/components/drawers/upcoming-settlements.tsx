@@ -165,6 +165,7 @@ function UpcomingSettlementCourseCard({
         <Text size={'sm'}>{title}</Text>
         {installments.map((el) => (
           <Group
+            key={el.id}
             sx={{
               flexDirection: 'row',
               justifyContent: 'space-between',
@@ -185,7 +186,7 @@ function UpcomingSettlementCourseCard({
                   border: darkMode ? '1px solid gray' : '',
                   borderRadius: '5px',
                 }}
-                checked={el.is_selected}
+                defaultChecked={el.is_selected}
                 wrapperProps={{
                   onClick: () => handleCheckboxChange(el),
                 }}

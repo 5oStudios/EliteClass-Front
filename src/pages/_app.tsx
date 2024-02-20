@@ -15,6 +15,7 @@ import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import rtlPlugin from 'stylis-plugin-rtl';
 import axios from '@/components/axios/axios';
+import AppContext from '../../context/context';
 
 // import OpenReplay from '@openreplay/tracker';
 import '../styles/accessdenied.css';
@@ -295,7 +296,16 @@ export const App = (props: AppProps & { colorScheme: ColorScheme; locale: string
                 <NextNProgress color="#E2BB50" options={{ showSpinner: false }} />
                 {
                   //@ts-ignore
-                  getLayout(<Component {...pageProps} />)
+                  getLayout(
+                    <AppContext.Provider
+                    // value={{
+                    //   tracker,
+                    //   setTracker: setUserTracker,
+                    // }}
+                    >
+                      <Component {...pageProps} />
+                    </AppContext.Provider>
+                  )
                 }
               </NotificationsProvider>
               {upcomingDrawer && <UpcomingSettlements upcomingInstallments={upcoming} />}
