@@ -298,7 +298,7 @@ export const CourseQuiz = () => {
                       color="blue"
                       onChange={(value: any) => {
                         setAnswers((state) => {
-                          console.log('STATE:', state);
+                          // console.log('STATE:', state);
                           const newState = [...state];
                           const currentQuestion = state.findIndex((q) => q.id === question.id);
                           if (currentQuestion !== -1) {
@@ -315,28 +315,71 @@ export const CourseQuiz = () => {
                         className="reportcardRadio"
                         disabled={getResult.isSuccess}
                         value={'a'}
-                        label={question.a}
+                        label={
+                          question.is_image ? (
+                            <Image
+                              radius="md"
+                              width={50}
+                              src={`${process.env.NEXT_PUBLIC_image_PATH}${question.a}`}
+                            />
+                          ) : (
+                            question.a
+                          )
+                        }
                       />
+
+                      <h3>asdasdasdas</h3>
+
                       <Radio
                         id={`rdb-b-${question.id}`}
                         className="reportcardRadio"
                         disabled={getResult.isSuccess}
                         value={'b'}
-                        label={question.b}
+                        label={
+                          question.is_image ? (
+                            <Image
+                              radius="md"
+                              width={50}
+                              src={`${process.env.NEXT_PUBLIC_image_PATH}${question.b}`}
+                            />
+                          ) : (
+                            question.b
+                          )
+                        }
                       />
                       <Radio
                         id={`rdb-c-${question.id}`}
                         className="reportcardRadio"
                         disabled={getResult.isSuccess}
                         value={'c'}
-                        label={question.c}
+                        label={
+                          question.is_image ? (
+                            <Image
+                              radius="md"
+                              width={50}
+                              src={`${process.env.NEXT_PUBLIC_image_PATH}${question.c}`}
+                            />
+                          ) : (
+                            question.c
+                          )
+                        }
                       />
                       <Radio
                         id={`rdb-d-${question.id}`}
                         className="reportcardRadio"
                         disabled={getResult.isSuccess}
                         value={'d'}
-                        label={question.d}
+                        label={
+                          question.is_image ? (
+                            <Image
+                              radius="md"
+                              width={50}
+                              src={`${process.env.NEXT_PUBLIC_image_PATH}${question.d}`}
+                            />
+                          ) : (
+                            question.d
+                          )
+                        }
                       />
                     </RadioGroup>
                   )}
