@@ -685,9 +685,8 @@ const LiveSessionOverview = () => {
                       </ActionIcon>
                       {sessiondetail?.is_purchased ? (
                         renderEnrollButton(false)
-                      ) : sessiondetail?.discount_price ? (
-                        renderEnrollButton(true)
-                      ) : (
+                      ) : sessiondetail?.discount_price > 0 &&
+                        sessiondetail?.discount_price != null ? (
                         <Stack
                           id="btn-livesessionAddToCart"
                           sx={{
@@ -729,6 +728,8 @@ const LiveSessionOverview = () => {
                             )}
                           </Stack>
                         </Stack>
+                      ) : (
+                        renderEnrollButton(true)
                       )}
                     </Affix>
                   ) : (
