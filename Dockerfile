@@ -23,9 +23,7 @@ COPY . .
 
 ENV NODE_ENV production
 
-RUN mv .env.example .env \
-    && sed -i 's/pre.panel.lms.elite-class.com/dash.staging.elite-class.com/g' .env \
-    && sed -i 's/pre.lms.elite-class.com/app.staging.elite-class.com/g' .env \
+RUN mv .env.copy.pro .env \
     && npm run build
 
 FROM node:18.17-alpine AS runner
