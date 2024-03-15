@@ -72,7 +72,7 @@ export const UpcomingSettlements = (props: { upcomingInstallments: AccordionLabe
     // Use the selectedIds array to send data to the API
     // console.log('Selected items:', selectedItems);
     // Add your API call logic here
-    router.replace('/user/cart');
+    router.replace('/user/invoices');
     setIsOpen(false);
   };
 
@@ -92,7 +92,7 @@ export const UpcomingSettlements = (props: { upcomingInstallments: AccordionLabe
     >
       <Stack
         sx={{
-          overflowY: 'scroll',
+          overflowY: 'auto',
           maxHeight: 'calc(100vh - 200px)',
         }}
         spacing={6}
