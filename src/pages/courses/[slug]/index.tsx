@@ -632,7 +632,7 @@ const CourseDetails: NextPage = () => {
                         height={'100%'}
                         frameBorder="0"
                         allow="accelerometer; gyroscope; encrypted-media; autoplay; picture-in-picture"
-                        allowFullScreen={false}
+                        allowFullScreen={true}
                       />
                     ) : (
                       <Text sx={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>
