@@ -23,8 +23,7 @@ COPY . .
 
 ENV NODE_ENV production
 
-RUN mv .env.copy.pro .env \
-    && npm run build
+RUN npm run build
 
 FROM node:18.17-alpine AS runner
 
