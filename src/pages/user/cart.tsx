@@ -142,11 +142,7 @@ export const Cart = () => {
     axios
       .get('show/cart')
       .then((res: any) => {
-        console.log(res.data);
-
         res.data.cart.forEach((el: any) => {
-          console.log(el);
-
           if (el.discountType !== null) {
             if (el.price != 0) {
               el.haveOffer = true;
@@ -158,9 +154,7 @@ export const Cart = () => {
             }
           } else if (el.discountType === null && el.price == 0) {
             el.price = el.originalPrice;
-            console.log(el.price);
           }
-          console.log(el);
         });
         setCart(res.data);
         //const msg = !res?.data?.message ? false : true;
