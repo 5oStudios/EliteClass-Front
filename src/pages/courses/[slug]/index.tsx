@@ -102,10 +102,7 @@ const CourseDetails: NextPage = () => {
       });
       console.log(response);
 
-      if (
-        response.data.course.discount_type !== null &&
-        response.data.course.discount_price !== 0
-      ) {
+      if (response.data.course.discount_type !== null && response.data.course.discount_price != 0) {
         response.data.course.haveOffer = true;
         console.log(response.data.course.discount_price, 'haveoffer');
 

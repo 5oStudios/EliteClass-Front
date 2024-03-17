@@ -145,14 +145,18 @@ export const Cart = () => {
         console.log(res.data);
 
         res.data.cart.forEach((el: any) => {
-          if (el.discountType !== null && el.price !== 0) {
-            el.haveOffer = true;
+          console.log(el);
+
+          if (el.discountType !== null) {
+            if (el.price != 0) {
+              el.haveOffer = true;
+            }
             if (el.discountType === 'fixed') {
               el.price = el.originalPrice - el.price;
             } else if (el.discountType === 'percentage') {
               el.price = ((100 - el.price) / 100) * el.originalPrice;
             }
-          } else if (el.discountType === null && el.price === 0) {
+          } else if (el.discountType === null && el.price == 0) {
             el.price = el.originalPrice;
             console.log(el.price);
           }
