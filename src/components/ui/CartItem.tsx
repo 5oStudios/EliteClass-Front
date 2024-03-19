@@ -159,6 +159,7 @@ const CartItem = ({
     };
     axios(config)
       .then((res) => {
+        res = applyNewDiscountTeq(res);
         setRemoving(false);
         processing(false);
         updatedCart(res?.data);
@@ -210,16 +211,17 @@ const CartItem = ({
     axios(config)
       .then((res) => {
         //here handle discount
-        res.data.cart.forEach((el: any) => {
-          if (el.discountType !== null && el.price !== 0) {
-            el.haveOffer = true;
-            if (el.discountType === 'fixed') {
-              el.price = el.originalPrice - el.price;
-            } else {
-              el.price = ((100 - el.price) / 100) * el.originalPrice;
-            }
-          }
-        });
+        res = applyNewDiscountTeq(res);
+        // res.data.cart.forEach((el: any) => {
+        //   if (el.discountType !== null && el.price !== 0) {
+        //     el.haveOffer = true;
+        //     if (el.discountType === 'fixed') {
+        //       el.price = el.originalPrice - el.price;
+        //     } else {
+        //       el.price = ((100 - el.price) / 100) * el.originalPrice;
+        //     }
+        //   }
+        // });
         processing(false);
         updatedCart(res?.data);
         setMsg(res?.data?.message);
@@ -247,7 +249,19 @@ const CartItem = ({
         }
       });
   };
-
+  const applyNewDiscountTeq = (res: any) => {
+    res.data.cart.forEach((el: any) => {
+      if (el.discountType !== null && el.price !== 0) {
+        el.haveOffer = true;
+        if (el.discountType === 'fixed') {
+          el.price = el.originalPrice - el.price;
+        } else {
+          el.price = ((100 - el.price) / 100) * el.originalPrice;
+        }
+      }
+    });
+    return res;
+  };
   const applyCoupon = (
     obj: Object,
     type: string,
@@ -354,6 +368,8 @@ const CartItem = ({
 
     axios(config)
       .then((res) => {
+        res = applyNewDiscountTeq(res);
+
         setAppling(false);
         processing(false);
         setIsOpen(false);

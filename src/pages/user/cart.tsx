@@ -142,21 +142,19 @@ export const Cart = () => {
     axios
       .get('show/cart')
       .then((res: any) => {
-        console.log(res.data);
-
         res.data.cart.forEach((el: any) => {
-          if (el.discountType !== null && el.price !== 0) {
-            el.haveOffer = true;
+          if (el.discountType !== null) {
+            if (el.price != 0) {
+              el.haveOffer = true;
+            }
             if (el.discountType === 'fixed') {
               el.price = el.originalPrice - el.price;
             } else if (el.discountType === 'percentage') {
               el.price = ((100 - el.price) / 100) * el.originalPrice;
             }
-          } else if (el.discountType === null && el.price === 0) {
+          } else if (el.discountType === null && el.price == 0) {
             el.price = el.originalPrice;
-            console.log(el.price);
           }
-          console.log(el);
         });
         setCart(res.data);
         //const msg = !res?.data?.message ? false : true;

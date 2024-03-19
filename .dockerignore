@@ -2,6 +2,5 @@ node_modules
 .next
 .git
 Dockerfile
-.env
 .env.local
 out
