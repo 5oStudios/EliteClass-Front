@@ -29,6 +29,8 @@ const PrintComponent = ({ id, setLoading, loading }: any) => {
         class_id: id,
       });
       await axios.get(data.URL);
+      console.log('link to print:' + data.URL);
+
       printJS(data.URL);
     } catch (error) {
       console.log(error);

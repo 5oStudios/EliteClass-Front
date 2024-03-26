@@ -176,6 +176,7 @@ const MuPdfViewer = ({
       setshowLoader(false);
       link.href = data.URL;
       link.download = data.URL.substr(data.URL.lastIndexOf('/') + 1);
+      console.log('link to download:' + link.href);
       document.body.appendChild(link);
 
       link.click();
