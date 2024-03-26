@@ -777,9 +777,9 @@ const CartItem = ({
                       <Checkbox
                         value={items?.id + ''}
                         style={{ width: '100%' }}
+                        checked={items?.expire || payInstallment?.includes(items?.id)}
                         disabled={items?.expire || index === item.installments?.length - 1}
                         className="handleCheckBoxWidth"
-                        checked={items?.expire || payInstallment?.includes(items?.id)}
                         label={
                           <Grid>
                             <Grid.Col span={7}>
