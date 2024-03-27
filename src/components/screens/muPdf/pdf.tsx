@@ -12,7 +12,6 @@ import {
   Text,
   useMantineColorScheme,
 } from '@mantine/core';
-import { useOs } from '@mantine/hooks';
 
 import { DoubleCircle } from '@/src/constants/DoubleCircle';
 import Print from '../../../public/assets/images/print.svg';
@@ -21,7 +20,7 @@ import { ArrowLeftIcon } from '@modulz/radix-icons';
 import { useRouter } from 'next/router';
 import { useQueryClient } from 'react-query';
 import { markComplete } from '@/utils/axios/markLessonComplete';
-import { useId } from '@mantine/hooks';
+import { useId, useOs } from '@mantine/hooks';
 import { getCookie } from 'cookies-next';
 import axios from '@/components/axios/axios.js';
 import { showNotification } from '@mantine/notifications';
