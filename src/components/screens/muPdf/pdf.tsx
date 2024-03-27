@@ -12,6 +12,7 @@ import {
   Text,
   useMantineColorScheme,
 } from '@mantine/core';
+
 import { DoubleCircle } from '@/src/constants/DoubleCircle';
 import Print from '../../../public/assets/images/print.svg';
 import { SizeMe } from 'react-sizeme';
@@ -19,7 +20,7 @@ import { ArrowLeftIcon } from '@modulz/radix-icons';
 import { useRouter } from 'next/router';
 import { useQueryClient } from 'react-query';
 import { markComplete } from '@/utils/axios/markLessonComplete';
-import { useId } from '@mantine/hooks';
+import { useId, useOs } from '@mantine/hooks';
 import { getCookie } from 'cookies-next';
 import axios from '@/components/axios/axios.js';
 import { showNotification } from '@mantine/notifications';
@@ -53,6 +54,7 @@ const MuPdfViewer = ({
   showDownloadButton?: boolean;
   showPrintButton?: boolean;
 }) => {
+  const os = useOs();
   const stableid = useId();
   const [numPages, setNumPages] = useState(1);
   const router = useRouter();
@@ -176,9 +178,11 @@ const MuPdfViewer = ({
       setshowLoader(false);
       link.href = data.URL;
       link.download = data.URL.substr(data.URL.lastIndexOf('/') + 1);
+      console.log('link to download:' + link.href);
       document.body.appendChild(link);
-
-      link.click();
+      if (os !== 'android' && os !== 'ios') {
+        link.click();
+      }
       document.body.removeChild(link);
       // window.open(data.URL);
     } catch (error: any) {

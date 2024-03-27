@@ -96,7 +96,8 @@ export const App = (props: AppProps & { colorScheme: ColorScheme; locale: string
           };
         })
       );
-      if (response.data.length > 0) {
+      const index = response.data.findIndex((el: any) => el.installments.length === 0);
+      if (response.data.length > 0 && index < 0) {
         setupcomingDrawer(true);
       }
     });

@@ -76,13 +76,15 @@ export const UpcomingSettlements = (props: { upcomingInstallments: AccordionLabe
     setIsOpen(false);
   };
 
-  const overdueCourses = upcomingInstallments.map((item) => (
-    <UpcomingSettlementCourseCard
-      key={item.typeId}
-      {...item}
-      onCardCheck={() => handleCardCheck(item)}
-    />
-  ));
+  const overdueCourses = upcomingInstallments.map((item) => {
+    return item.installments.length !== 0 ? (
+      <UpcomingSettlementCourseCard
+        key={item.typeId}
+        {...item}
+        onCardCheck={() => handleCardCheck(item)}
+      />
+    ) : null;
+  });
 
   return (
     <BaseDrawerWrapper
