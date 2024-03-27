@@ -12,6 +12,8 @@ import {
   Text,
   useMantineColorScheme,
 } from '@mantine/core';
+import { useOs } from '@mantine/hooks';
+
 import { DoubleCircle } from '@/src/constants/DoubleCircle';
 import Print from '../../../public/assets/images/print.svg';
 import { SizeMe } from 'react-sizeme';
@@ -53,6 +55,7 @@ const MuPdfViewer = ({
   showDownloadButton?: boolean;
   showPrintButton?: boolean;
 }) => {
+  const os = useOs();
   const stableid = useId();
   const [numPages, setNumPages] = useState(1);
   const router = useRouter();
@@ -178,8 +181,9 @@ const MuPdfViewer = ({
       link.download = data.URL.substr(data.URL.lastIndexOf('/') + 1);
       console.log('link to download:' + link.href);
       document.body.appendChild(link);
-
-      link.click();
+      if (os !== 'android' && os !== 'ios') {
+        link.click();
+      }
       document.body.removeChild(link);
       // window.open(data.URL);
     } catch (error: any) {

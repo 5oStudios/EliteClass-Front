@@ -6,9 +6,12 @@ import { PrintBtn } from '@/src/constants/Print';
 import { CartLoadingScreen } from '@/components/ui/cart-loader-screen';
 import { LoadingDots } from '../ui/loading-dots';
 import Image from 'next/image';
+import { useOs } from '@mantine/hooks';
+
 // import { DoubleCircle } from '@/src/constants/DoubleCircle';
 // import { PrintIcon } from '@/src/constants/PrintIcon';
 const PrintComponent = ({ id, setLoading, loading }: any) => {
+  const os = useOs();
   const [disablePrint, setDisabledPrint] = useState(true);
   const { colorScheme } = useMantineColorScheme();
   useEffect(() => {
@@ -30,8 +33,9 @@ const PrintComponent = ({ id, setLoading, loading }: any) => {
       });
       await axios.get(data.URL);
       console.log('link to print:' + data.URL);
-
-      printJS(data.URL);
+      if (os !== 'android' && os !== 'ios') {
+        printJS(data.URL);
+      }
     } catch (error) {
       console.log(error);
     } finally {
