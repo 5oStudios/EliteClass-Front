@@ -180,9 +180,9 @@ const MuPdfViewer = ({
       link.download = data.URL.substr(data.URL.lastIndexOf('/') + 1);
       console.log('link to download:' + link.href);
       document.body.appendChild(link);
-      if (os !== 'android' && os !== 'ios') {
+      // if (os !== 'android' && os !== 'ios') {
         link.click();
-      }
+      // }
       document.body.removeChild(link);
       // window.open(data.URL);
     } catch (error: any) {
