@@ -33,9 +33,9 @@ const PrintComponent = ({ id, setLoading, loading }: any) => {
       });
       await axios.get(data.URL);
       console.log('link to print:' + data.URL);
-      if (os !== 'android' && os !== 'ios') {
+      // if (os !== 'android' && os !== 'ios') {
         printJS(data.URL);
-      }
+      // }
     } catch (error) {
       console.log(error);
     } finally {
