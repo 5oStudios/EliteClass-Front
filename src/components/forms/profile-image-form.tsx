@@ -1,5 +1,5 @@
 import { ActionIcon, Box } from '@mantine/core';
-import { Dropzone } from '@mantine/dropzone';
+import { Dropzone, MIME_TYPES } from '@mantine/dropzone';
 import { useState } from 'react';
 import { CameraIcon } from '@/src/constants/icons';
 import axios from '../axios/axios.js';
@@ -157,20 +157,7 @@ export const ProfileImageForm = ({ url, name, isEditable, onView }: Props) => {
         }}
         //radius="xl"
       >
-        {
-          () => (
-            <input
-              name="photos"
-              onChange={(e) => {
-                console.log(e);
-              }}
-              type="file"
-              capture="environment"
-              accept="image/*"
-            />
-          )
-          // <CameraIcon viewBox="-3 -3 30 30" width={20} height={20} />
-        }
+        {() => <CameraIcon viewBox="-3 -3 30 30" width={20} height={20} />}
       </Dropzone>
     </ActionIcon>
   );
