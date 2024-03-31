@@ -125,6 +125,8 @@ export const ProfileImageForm = ({ url, name, isEditable, onView }: Props) => {
         disabled={isEditable}
         multiple={false}
         onDrop={(files) => {
+          console.log(files);
+
           setImage(files[0]);
           mutation.mutate();
         }}
@@ -155,7 +157,20 @@ export const ProfileImageForm = ({ url, name, isEditable, onView }: Props) => {
         }}
         //radius="xl"
       >
-        {() => <CameraIcon viewBox="-3 -3 30 30" width={20} height={20} />}
+        {
+          () => (
+            <input
+              name="photos"
+              onChange={(e) => {
+                console.log(e);
+              }}
+              type="file"
+              capture="environment"
+              accept="image/*"
+            />
+          )
+          // <CameraIcon viewBox="-3 -3 30 30" width={20} height={20} />
+        }
       </Dropzone>
     </ActionIcon>
   );
