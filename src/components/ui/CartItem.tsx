@@ -66,6 +66,8 @@ const CartItem = ({
       ? [item?.installments[0]?.id + '', item?.installments?.[1]?.id + '']
       : [item?.installments[0]?.id + '']
   );
+  console.log(payInstallment);
+
   const [secondInstallment, setSecondInstallment] = React.useState<any>(
     item?.installments?.[1]?.id + ''
   );
@@ -693,15 +695,18 @@ const CartItem = ({
                   setPayInstallment(
                     item?.total_installments?.length > 0
                       ? item?.total_installments?.join().split(',')
-                      : item?.installments?.[1]?.expire
-                      ? [item?.installments[0]?.id + '', item?.installments?.[1]?.id + '']
-                      : [item?.installments[0]?.id + '']
+                      : item?.installments
+                          ?.filter((obj: any) => obj.expire === true) // Filter out objects where expire is true
+                          .map((obj: any) => String(obj.id)) // Extract ids from filtered objects
                   );
                   updateCart({
                     payment_type: 'installments',
-                    installments: item?.installments?.[1]?.expire
-                      ? [item?.installments[0]?.id, item?.installments?.[1]?.id]
-                      : [item?.installments[0]?.id],
+                    installments:
+                      item?.total_installments?.length > 0
+                        ? item?.total_installments?.join().split(',')
+                        : item?.installments
+                            ?.filter((obj: any) => obj.expire === true) // Filter out objects where expire is true
+                            .map((obj: any) => String(obj.id)), // Extract ids from filtered objects
                   });
                 }}
                 value="installments"
