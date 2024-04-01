@@ -1,6 +1,8 @@
 import { ActionIcon, Box } from '@mantine/core';
 import { Dropzone, MIME_TYPES } from '@mantine/dropzone';
 import { useState } from 'react';
+import { getCookie, setCookie } from 'cookies-next';
+
 import { CameraIcon } from '@/src/constants/icons';
 import axios from '../axios/axios.js';
 import { showNotification } from '@mantine/notifications';
@@ -125,10 +127,10 @@ export const ProfileImageForm = ({ url, name, isEditable, onView }: Props) => {
         disabled={isEditable}
         multiple={false}
         onDrop={(files) => {
-          console.log(files);
+          console.log(files[0]);
 
-          setImage(files[0]);
-          mutation.mutate();
+          // setImage(files[0]);
+          // mutation.mutate();
         }}
         onReject={onReject}
         maxSize={20 * 1024 ** 2}
@@ -157,7 +159,20 @@ export const ProfileImageForm = ({ url, name, isEditable, onView }: Props) => {
         }}
         //radius="xl"
       >
-        {() => <CameraIcon viewBox="-3 -3 30 30" width={20} height={20} />}
+        {() => (
+          <CameraIcon
+            viewBox="-3 -3 30 30"
+            width={20}
+            height={20}
+            onClick={() => {
+              console.log(
+                `profile image: ${process.env.NEXT_PUBLIC_BACKEND_URL}/update/profile;${getCookie(
+                  'access_token'
+                )}`
+              );
+            }}
+          />
+        )}
       </Dropzone>
     </ActionIcon>
   );
