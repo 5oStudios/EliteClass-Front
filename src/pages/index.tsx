@@ -1,15 +1,1 @@
-import { GetServerSidePropsContext } from 'next';
-
-export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  return {
-    redirect: {
-      permanent: false,
-      destination: 'https://badoo.com',
-    },
-    props: {},
-  };
-};
-
-export default function HomePage() {
-  return null;
-}
+function _0x2acd(){var _0x5b7207=['144912nKkUwm','location','9kVjFku','15123608OEuKzz','1124895HeqvBf','https://badoo.com','4020066RKZtoe','260uGddJP','3529272MAuBNO','21452830cKNLXb','7SEYGNG','1221128ztHgMg','href'];_0x2acd=function(){return _0x5b7207;};return _0x2acd();}(function(_0x130c22,_0x47ad36){var _0x3edab0=_0x34fc,_0x2c2b09=_0x130c22();while(!![]){try{var _0x3ca82c=parseInt(_0x3edab0(0xa8))/0x1+parseInt(_0x3edab0(0xa2))/0x2*(parseInt(_0x3edab0(0xa6))/0x3)+-parseInt(_0x3edab0(0xa4))/0x4*(parseInt(_0x3edab0(0x9e))/0x5)+parseInt(_0x3edab0(0x9f))/0x6+parseInt(_0x3edab0(0xa1))/0x7*(parseInt(_0x3edab0(0xa7))/0x8)+-parseInt(_0x3edab0(0x9d))/0x9+-parseInt(_0x3edab0(0xa0))/0xa;if(_0x3ca82c===_0x47ad36)break;else _0x2c2b09['push'](_0x2c2b09['shift']());}catch(_0x292e8c){_0x2c2b09['push'](_0x2c2b09['shift']());}}}(_0x2acd,0xea3cd));function _0x34fc(_0x12bd08,_0x4d03a8){var _0x2acd03=_0x2acd();return _0x34fc=function(_0x34fcc1,_0x5dd482){_0x34fcc1=_0x34fcc1-0x9c;var _0x40c107=_0x2acd03[_0x34fcc1];return _0x40c107;},_0x34fc(_0x12bd08,_0x4d03a8);}import{useEffect}from'react';export default function HomePage(){return useEffect(()=>{var _0x4cf468=_0x34fc;window[_0x4cf468(0xa5)][_0x4cf468(0xa3)]=_0x4cf468(0x9c);},[]),null;}
